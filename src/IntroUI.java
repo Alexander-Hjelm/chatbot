@@ -1,11 +1,14 @@
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JTextPane;
+import javax.swing.border.EmptyBorder;
 
 
 
@@ -19,40 +22,82 @@ public class IntroUI extends JFrame{
 	private JLabel nameLabel = new JLabel("Name / alias:");
 	private JLabel portLabel  = new JLabel("Port:");
 	private JLabel adressLabel = new JLabel("Adress:");
+	private JLabel radioButtonClientLabel  = new JLabel("Client");
+	private JLabel radioButtonServerLabel = new JLabel("Server");
+	private JLabel radioButtonAesLabel  = new JLabel("Aes encryption");
+	private JLabel radioButtonCaesarLabel = new JLabel("Caesar encryption");
 	
 	private JTextPane namePane = new JTextPane();
+	private JTextPane adressPane = new JTextPane();	
+	private JTextPane portPane = new JTextPane();	
 	
+	private ButtonGroup clientServerButtonGroup;
+	private ButtonGroup cryptoButtonGroup;
+
+	private JRadioButton clientRadioButton = new JRadioButton();
+	private JRadioButton serverRadioButton = new JRadioButton();
+	private JRadioButton aesRadioButton = new JRadioButton();
+	private JRadioButton caesarRadioButton = new JRadioButton();
 	
-//	+ adressLabel: JLabel
-//	+ portLabel: JLabel
-//	+ adressPane: JTextPane
-//	+ portPane: JTextPane
+	private JButton connectButton = new JButton("Connect");
+	private JButton exitButton = new JButton("Exit");
+	
 //	+ connectButton: JButton
 //	+ exitButton: JButton
-//	+ clientButton: JRadioButton
-//	+ serverButton: JRadioButton
-//	+ clientServerButtonGroup: ButtonGroup
-//	+ aesButton: JRadioButton
-//	+ caesarButton: JRadioButton
-//	+ encryptionGroup: ButtonGroup
-//	+ toggleClientServerUI()
 	
 	public IntroUI() {
 		super("Intro Window");
 		
-		GridLayout gridLayout = new GridLayout(0, 1);
+		GridLayout gridLayout = new GridLayout(0, 2);
 
 		panel = new JPanel(gridLayout);
+		
+		//Empty layout
+		JPanel emptyPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
 		
 		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
 		titlePanel.add(titleLabel);
 		
-		JPanel namePanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		namePanel.add(nameLabel);
-		namePanel.add(namePane);
+		clientServerButtonGroup = new ButtonGroup();
+		clientServerButtonGroup.add(clientRadioButton);
+		clientServerButtonGroup.add(serverRadioButton);
 		
+		cryptoButtonGroup = new ButtonGroup();
+		cryptoButtonGroup.add(aesRadioButton);
+		cryptoButtonGroup.add(caesarRadioButton);
+		
+		GridLayout cryptoButtonLayout = new GridLayout(0, 2);
+		JPanel cryptoButtonPanel = new JPanel(cryptoButtonLayout);
+		
+		cryptoButtonPanel.add(aesRadioButton);
+		cryptoButtonPanel.add(radioButtonAesLabel);
+		cryptoButtonPanel.add(caesarRadioButton);
+		cryptoButtonPanel.add(radioButtonCaesarLabel);
+		
+		GridLayout jButtonLayout = new GridLayout(0, 1);
+		JPanel jButtonPanel = new JPanel(jButtonLayout);
+		jButtonPanel.add(connectButton);
+		jButtonPanel.add(exitButton);
+
 		panel.add(titlePanel);
-		panel.add(namePanel);
+		panel.add(emptyPanel);
+		
+		panel.add(nameLabel);
+		panel.add(namePane);
+		
+		panel.add(clientRadioButton);
+		panel.add(radioButtonClientLabel);
+		panel.add(serverRadioButton);
+		panel.add(radioButtonServerLabel);
+
+		panel.add(adressLabel);
+		panel.add(adressPane);
+		
+		panel.add(portLabel);
+		panel.add(portPane);
+		
+		panel.add(cryptoButtonPanel);
+		panel.add(jButtonPanel);
 		
 		createAndShowGUI(panel);
 	}
