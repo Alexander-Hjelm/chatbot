@@ -3,7 +3,7 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Client {
+public class Client implements Runnable{
 
 	private int destinationPort;
 	private ChatUI userInter;
@@ -17,6 +17,11 @@ public class Client {
 	public void connect(String Adress, int port) throws UnknownHostException, IOException {
 		Socket s = new Socket(Adress, port);
 		
+		
+	}
+
+	public void run() {
+		// TODO Auto-generated method stub
 		
 	} 
 	

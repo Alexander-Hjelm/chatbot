@@ -3,7 +3,7 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 
-public class Server {
+public class Server implements Runnable{
 
 	private int port;
 	private String adress;
@@ -22,6 +22,11 @@ public Server(int portIn, String adressIn, ChatUI ui ) {
 	
 	public void stopServer() throws IOException {
 		socket.close();
+	}
+
+	public void run() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 	
