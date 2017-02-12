@@ -10,6 +10,7 @@ public class Client {
 	// åh så bög!
 	// FUL KOMMENTAR
 	// en fin klänning
+	// kydgiufyg
 	
 	public Client(int portIn, ChatUI ui) {
 		destinationPort = portIn;
