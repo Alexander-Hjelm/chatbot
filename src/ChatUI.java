@@ -29,6 +29,7 @@ public class ChatUI extends JFrame{
 	
 	
 	public ChatUI(Server serverIn, Client clientIn) {
+		super("Chat Window");
 		if (serverIn != null) {
 			server = serverIn;
 		}
@@ -38,7 +39,7 @@ public class ChatUI extends JFrame{
 		}
 		
 		
-		super("Chat Window");
+		
 	
 		
 		
