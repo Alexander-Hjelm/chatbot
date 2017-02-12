@@ -28,6 +28,7 @@ public class Program{
 		// TODO Auto-generated method stub
 //		chatFrame = buildChatFrame();
 //		createAndShowGUI(chatFrame);
+		IntroUI introUI = new IntroUI();
 		ChatUI chatUI = new ChatUI();
 	}
 
