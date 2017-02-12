@@ -8,6 +8,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextPane;
 
@@ -21,6 +22,7 @@ public class ChatUI extends JFrame{
 	private Client client;
 	private JPanel panel;
 	private JTextArea messageArea;
+	private JScrollPane messageScrollPane;
 	private JLabel titleLabel; 
 	private JLabel otherNamesLabel;
 	private JTextPane myMessagePane;
@@ -60,6 +62,7 @@ public class ChatUI extends JFrame{
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	            // add listener stuff, some get data from myMessagePane for this button.
+	        	 client.send(messageArea.getText());
 	         }
 	      });
 		
@@ -86,6 +89,9 @@ public class ChatUI extends JFrame{
 	private void createAndShowGUI(JPanel panel) {
 		
 		messageArea = new JTextArea();
+//		messageArea.setEditable(false);
+		
+		messageScrollPane = new JScrollPane(messageArea);
 		titleLabel = new JLabel("MSN 2017"); 
 		otherNamesLabel  = new JLabel();
 		myMessagePane = new JTextPane();
@@ -94,6 +100,42 @@ public class ChatUI extends JFrame{
 		
 		panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints(); 
+		
+		// add stuff to panel then add panel to frame.
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 0;
+        c.gridx = 1;
+        c.weightx = 0.5;
+        panel.add(titleLabel,c);
+		
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 2;
+        c.gridx = 0;
+        c.weightx = 1;
+        panel.add(myMessagePane, c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 2;
+        c.gridx = 1;
+        c.weightx = 1;
+        panel.add(sendButton,c);
+        
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 0;
+        c.gridx = 0;
+        c.weightx = 1;
+        panel.add(exitButton,c);
+        
+        
+		
+        c.fill = GridBagConstraints.BOTH;
+        c.gridwidth = GridBagConstraints.REMAINDER;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 1;
+        c.weighty = 1;
+        panel.add(messageScrollPane,c);
 		
 		
 		
