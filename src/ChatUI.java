@@ -89,7 +89,7 @@ public class ChatUI extends JFrame{
 	private void createAndShowGUI(JPanel panel) {
 		
 		messageArea = new JTextArea();
-//		messageArea.setEditable(false);
+		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
 		titleLabel = new JLabel("MSN 2017"); 
