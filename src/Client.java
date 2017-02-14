@@ -7,10 +7,9 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 
 
-public class Client implements Runnable{
+public class Client extends CommunicationsHandler{
 
 	private int destinationPort;
-	private ChatUI userInter;
 	private DataInputStream streamIn;
 	private Socket s;
 
@@ -21,20 +20,13 @@ public class Client implements Runnable{
 //		userInter = ui;
 		s = new Socket("localhost", 4444);
 		connect("localhost", destinationPort);
-		
-		
 	}
 	
 	public void connect(String Adress, int port) throws UnknownHostException, IOException {
-
-
-		
-		Thread t = new Thread(this);
-		t.start();
-		
-		
+		startThread();
 	}
 
+	@Override
 	public void run() {
 		while (true) {
 
@@ -57,6 +49,7 @@ public class Client implements Runnable{
 		}
 	} 
 	
+	@Override
 	public void send(String msg) {
 		
 	}
