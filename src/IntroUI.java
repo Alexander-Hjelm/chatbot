@@ -45,9 +45,6 @@ public class IntroUI extends JFrame{
 	private JButton connectButton = new JButton("Connect");
 	private JButton exitButton = new JButton("Exit");
 	
-//	+ connectButton: JButton
-//	+ exitButton: JButton
-	
 	public IntroUI() {
 		super("Intro Window");
 		
@@ -84,8 +81,8 @@ public class IntroUI extends JFrame{
 
 		connectButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	            //Create a new client or server, and assign that to a new ChatUI
-	        	//ChatUI now has control
+	        	 //Create a new client or server, and assign that to a new ChatUI
+	        	 //ChatUI now has control
 	        	 createChatUI(); 
 	         }
 	      });
