@@ -40,7 +40,7 @@ public Server(int portIn) throws IOException {
 			
 			
 			streamOut = new DataOutputStream(socket.getOutputStream());
-			streamOut.writeUTF("AEF=)");
+			streamOut.writeUTF(msg);
 			streamOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

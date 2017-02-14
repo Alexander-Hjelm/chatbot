@@ -53,7 +53,7 @@ public class ChatUI extends JFrame{
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	 // add listener stuff, some get data from myMessagePane for this button.
-	        	 communicationsHandler.send(messageArea.getText());
+	        	 communicationsHandler.send(myMessagePane.getText());
 	         }
 	      });
 		
