@@ -4,12 +4,11 @@ public class CommunicationsHandler implements Runnable{
 	private ChatUI chatUi;
 
 	public void run() {
-		// Override this in
-		
+		// Override this
 	}
 	
 	public void send(String message) {
-		
+		// Override this
 	}
 	
 	protected void startThread() {
