@@ -52,7 +52,7 @@ public class ChatUI extends JFrame{
 		
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	            // add listener stuff, some get data from myMessagePane for this button.
+	        	 // add listener stuff, some get data from myMessagePane for this button.
 	        	 communicationsHandler.send(messageArea.getText());
 	         }
 	      });
@@ -65,13 +65,13 @@ public class ChatUI extends JFrame{
 		
 		sendFileButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	            // open sendFileUI, open fileChooser etc. 
+	        	 // open sendFileUI, open fileChooser etc. 
 	         }
 	      });
 		
 		newChatButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	            // add listener stuff, some get data from myMessagePane for this button.
+	        	 // add listener stuff, some get data from myMessagePane for this button.
 	         }
 	      });
 		

@@ -29,7 +29,7 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void run() {
 		while (true) {
-
+			//Listen for messages from server
 			
 			try {
 				
@@ -39,10 +39,8 @@ public class Client extends CommunicationsHandler{
 				
 				
 			} catch (UnknownHostException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
