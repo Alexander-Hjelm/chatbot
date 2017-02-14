@@ -1,5 +1,8 @@
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -79,6 +82,14 @@ public class IntroUI extends JFrame{
 		jButtonPanel.add(connectButton);
 		jButtonPanel.add(exitButton);
 
+		connectButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	            //Create a new client or server, and assign that to a new ChatUI
+	        	//ChatUI now has control
+	        	 createChatUI(); 
+	         }
+	      });
+		
 		panel.add(titlePanel);
 		panel.add(emptyPanel);
 		
@@ -114,5 +125,19 @@ public class IntroUI extends JFrame{
 		this.setVisible(true);
 	}
 	
+	private void createChatUI() {
+		//Create a chatUI and assign to it a server or client depending on user selection
+		ChatUI chatUI;
+		try {
+			if (serverRadioButton.isSelected()) {
+					chatUI = new ChatUI(new Server(4444));
+			}
+			else if (clientRadioButton.isSelected()) {
+				chatUI = new ChatUI(new Client(4444));
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
 }

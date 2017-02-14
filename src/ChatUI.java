@@ -17,9 +17,8 @@ import javax.swing.JTextPane;
 
 public class ChatUI extends JFrame{
 
+	private CommunicationsHandler communicationsHandler;
 
-	private Server server;
-	private Client client;
 	private JPanel panel;
 	private JTextArea messageArea;
 	private JScrollPane messageScrollPane;
@@ -35,18 +34,10 @@ public class ChatUI extends JFrame{
 	private SendFileUI sendFileUI;
 	
 	
-	public ChatUI(Server serverIn, Client clientIn) {
+	public ChatUI(CommunicationsHandler communicationsHandler) {
 		super("Chat Window");
-		if (serverIn != null) {
-			server = serverIn;
-		}
-		
-		if (clientIn != null) {
-			client = clientIn;
-		}
-		
-		
-		
+		this.communicationsHandler = communicationsHandler;
+				
 		panel = new JPanel();
 		buttonAction();
 		createAndShowGUI(panel);
@@ -62,7 +53,7 @@ public class ChatUI extends JFrame{
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	            // add listener stuff, some get data from myMessagePane for this button.
-	        	 client.send(messageArea.getText());
+	        	 communicationsHandler.send(messageArea.getText());
 	         }
 	      });
 		

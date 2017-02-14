@@ -29,11 +29,11 @@ public class Program{
 		// TODO Auto-generated method stub
 //		chatFrame = buildChatFrame();
 //		createAndShowGUI(chatFrame);
-		Server server = new Server(4444);
-		Client client = new Client(4444);
+//		Server server = new Server(4444);
+//		Client client = new Client(4444);
 		
 		IntroUI introUI = new IntroUI();
-		ChatUI chatUI = new ChatUI(null, null);
+//		ChatUI chatUI = new ChatUI(null, null);
 		
 		
 		
