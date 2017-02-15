@@ -140,6 +140,7 @@ public class IntroUI extends JFrame{
 			}
 			
 			this.dispose();
+		
 			
 		} catch (IOException e) {
 			e.printStackTrace();

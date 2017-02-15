@@ -48,7 +48,7 @@ public class ChatUI extends JFrame{
 		this.userName = UserNameIn;
 		this.communicationType = communicationTypeIn;
 		
-		// tell communicationsHandler, client or server that this is their UI:
+		// tell communicationsHandler, client or server that this ChatUI is their UI:
 		communicationsHandler.setUI(this);
 				
 		panel = new JPanel();
@@ -151,7 +151,7 @@ public class ChatUI extends JFrame{
 		
 		
 	    //Create and set up the window.
-		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		this.setDefaultCloseOperation(communicationsHandler.exit());
 	  
 	    //Add contents to the window.
 		this.add(panel);
