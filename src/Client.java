@@ -10,19 +10,22 @@ import java.net.UnknownHostException;
 public class Client extends CommunicationsHandler{
 
 	private int destinationPort;
-	private DataInputStream streamIn;
 	private Socket s;
+	private DataInputStream streamIn;
+	private DataOutputStream streamOut;
+	private ChatUI UI;
 
 	
 
 	public Client(int portIn) throws UnknownHostException, IOException {
 		destinationPort = portIn;
-//		userInter = ui;
-		s = new Socket("localhost", 4444);
+		
+		//redundant method at the moment?
 		connect("localhost", destinationPort);
 	}
 	
 	public void connect(String Adress, int port) throws UnknownHostException, IOException {
+		s = new Socket("localhost", 4444);
 		startThread();
 	}
 
@@ -34,7 +37,10 @@ public class Client extends CommunicationsHandler{
 			try {
 				
 				streamIn = new DataInputStream(s.getInputStream());
-				System.out.println(streamIn.readUTF());
+				String msgIn = streamIn.readUTF();
+				
+				//not sure how to get a reference of who sent the message.
+				UI.updateMessageArea("Stranger: " + msgIn + "\n");
 				
 				
 				
@@ -47,8 +53,24 @@ public class Client extends CommunicationsHandler{
 		}
 	} 
 	
+
+	
+	
 	@Override
 	public void send(String msg) {
-		
+		try {
+			
+			
+			streamOut = new DataOutputStream(s.getOutputStream());
+			streamOut.writeUTF(msg);
+			streamOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void setUI(ChatUI UI) {
+		this.UI = UI;
 	}
 }

@@ -10,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 import javax.swing.border.EmptyBorder;
 
@@ -30,7 +31,10 @@ public class IntroUI extends JFrame{
 	private JLabel radioButtonAesLabel  = new JLabel("Aes encryption");
 	private JLabel radioButtonCaesarLabel = new JLabel("Caesar encryption");
 	
-	private JTextPane namePane = new JTextPane();
+	
+	//textpanes have no good methods for getting written text, changed to jtextfield for now. 
+//	private JTextPane namePane = new JTextPane();
+	private JTextField namePane = new JTextField();
 	private JTextPane adressPane = new JTextPane();	
 	private JTextPane portPane = new JTextPane();	
 	
@@ -125,12 +129,14 @@ public class IntroUI extends JFrame{
 	private void createChatUI() {
 		//Create a chatUI and assign to it a server or client depending on user selection
 		ChatUI chatUI;
+		String userName = namePane.getText();
+		
 		try {
 			if (serverRadioButton.isSelected()) {
-					chatUI = new ChatUI(new Server(4444));
+					chatUI = new ChatUI(new Server(4444),"Server: " + userName);
 			}
 			else if (clientRadioButton.isSelected()) {
-				chatUI = new ChatUI(new Client(4444));
+				chatUI = new ChatUI(new Client(4444), "Client: " + userName);
 			}
 			
 			this.dispose();

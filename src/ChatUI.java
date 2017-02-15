@@ -10,6 +10,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
 import javax.swing.JTextPane;
 
 
@@ -24,7 +25,12 @@ public class ChatUI extends JFrame{
 	private JScrollPane messageScrollPane;
 	private JLabel titleLabel; 
 	private JLabel otherNamesLabel;
-	private JTextPane myMessagePane;
+	
+	// changed to JTextField.
+//	private JTextPane myMessagePane;
+	private JTextField myMessagePane;
+	
+	
 	private JButton sendButton;
 	private JButton exitButton;
 	private JButton sendFileButton;
@@ -32,11 +38,16 @@ public class ChatUI extends JFrame{
 	private JFileChooser fileChooser;
 	private FileReceiverUI fileReceiverUI;
 	private SendFileUI sendFileUI;
+	private String typeUserName;
 	
 	
-	public ChatUI(CommunicationsHandler communicationsHandler) {
+	public ChatUI(CommunicationsHandler communicationsHandlerIn, String typeUserNameIn) {
 		super("Chat Window");
-		this.communicationsHandler = communicationsHandler;
+		this.communicationsHandler = communicationsHandlerIn;
+		this.typeUserName = typeUserNameIn;
+		
+		// tell communicationsHandler, client or server that this is their UI:
+		communicationsHandler.setUI(this);
 				
 		panel = new JPanel();
 		buttonAction();
@@ -53,7 +64,12 @@ public class ChatUI extends JFrame{
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	 // add listener stuff, some get data from myMessagePane for this button.
-	        	 communicationsHandler.send(myMessagePane.getText());
+	        	 String text = myMessagePane.getText();
+	        	 
+	        	 communicationsHandler.send(text);
+	        	 myMessagePane.setText("");
+	        	 updateMessageArea("You: " + text + "\n");
+
 	         }
 	      });
 		
@@ -83,9 +99,9 @@ public class ChatUI extends JFrame{
 		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
-		titleLabel = new JLabel("MSN 2017"); 
+		titleLabel = new JLabel(typeUserName); 
 		otherNamesLabel  = new JLabel();
-		myMessagePane = new JTextPane();
+		myMessagePane = new JTextField();
 
 		
 		
@@ -139,6 +155,11 @@ public class ChatUI extends JFrame{
 	    //Display the window.
 		this.pack();
 		this.setVisible(true);
+	}
+	
+	public void updateMessageArea(String msg) {
+		this.messageArea.append(msg);
+		
 	}
 	
 

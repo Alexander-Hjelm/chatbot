@@ -11,6 +11,10 @@ public class CommunicationsHandler implements Runnable{
 		// Override this
 	}
 	
+	public void setUI(ChatUI UI) {
+		// Override this
+	}
+	
 	protected void startThread() {
 		Thread t = new Thread(this);
 		t.start();

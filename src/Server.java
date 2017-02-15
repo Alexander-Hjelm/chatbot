@@ -1,7 +1,9 @@
+import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 
 
 public class Server extends CommunicationsHandler {
@@ -9,7 +11,9 @@ public class Server extends CommunicationsHandler {
 	private int port;
 	private ServerSocket server;
 	private Socket socket;
+	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
+	private ChatUI UI;
 
 public Server(int portIn) throws IOException {
 	port = portIn;
@@ -31,6 +35,25 @@ public Server(int portIn) throws IOException {
 	public void run() {
 		while (true) {
 			//Listen for messages from client
+			
+			try {
+				
+				streamIn = new DataInputStream(socket.getInputStream());
+				
+				
+				String msgIn = streamIn.readUTF();
+				
+				//not sure how to get a reference of who sent the message.
+				UI.updateMessageArea("Stranger: " + msgIn + "\n");
+				
+				
+				
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+			
 		}
 	}	
 	
@@ -45,5 +68,10 @@ public Server(int portIn) throws IOException {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	
+	public void setUI(ChatUI UI) {
+		this.UI = UI;
 	}
 }
