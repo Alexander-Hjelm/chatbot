@@ -43,8 +43,8 @@ public Server(int portIn) throws IOException {
 				
 				String msgIn = streamIn.readUTF();
 				
-				//not sure how to get a reference of who sent the message.
-				UI.updateMessageArea("Stranger: " + msgIn + "\n");
+				
+				UI.updateMessageArea(msgIn + "\n");
 				
 				
 				

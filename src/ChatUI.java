@@ -38,13 +38,15 @@ public class ChatUI extends JFrame{
 	private JFileChooser fileChooser;
 	private FileReceiverUI fileReceiverUI;
 	private SendFileUI sendFileUI;
-	private String typeUserName;
+	private String userName;
+	private String communicationType;
 	
 	
-	public ChatUI(CommunicationsHandler communicationsHandlerIn, String typeUserNameIn) {
+	public ChatUI(CommunicationsHandler communicationsHandlerIn, String UserNameIn, String communicationTypeIn) {
 		super("Chat Window");
 		this.communicationsHandler = communicationsHandlerIn;
-		this.typeUserName = typeUserNameIn;
+		this.userName = UserNameIn;
+		this.communicationType = communicationTypeIn;
 		
 		// tell communicationsHandler, client or server that this is their UI:
 		communicationsHandler.setUI(this);
@@ -64,9 +66,11 @@ public class ChatUI extends JFrame{
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	 // add listener stuff, some get data from myMessagePane for this button.
+	        	 // might want to build XML-message here, or it could be constructed by the string sent.
+	        	 
 	        	 String text = myMessagePane.getText();
 	        	 
-	        	 communicationsHandler.send(text);
+	        	 communicationsHandler.send(userName + ": " + text);
 	        	 myMessagePane.setText("");
 	        	 updateMessageArea("You: " + text + "\n");
 
@@ -99,7 +103,7 @@ public class ChatUI extends JFrame{
 		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
-		titleLabel = new JLabel(typeUserName); 
+		titleLabel = new JLabel(communicationType + ": " + userName); 
 		otherNamesLabel  = new JLabel();
 		myMessagePane = new JTextField();
 

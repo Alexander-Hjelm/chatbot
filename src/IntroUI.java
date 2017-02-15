@@ -133,10 +133,10 @@ public class IntroUI extends JFrame{
 		
 		try {
 			if (serverRadioButton.isSelected()) {
-					chatUI = new ChatUI(new Server(4444),"Server: " + userName);
+					chatUI = new ChatUI(new Server(4444), userName, "Server");
 			}
 			else if (clientRadioButton.isSelected()) {
-				chatUI = new ChatUI(new Client(4444), "Client: " + userName);
+				chatUI = new ChatUI(new Client(4444), userName, "Client");
 			}
 			
 			this.dispose();
