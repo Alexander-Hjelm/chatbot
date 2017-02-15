@@ -2,6 +2,8 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -25,9 +27,6 @@ public class ChatUI extends JFrame{
 	private JScrollPane messageScrollPane;
 	private JLabel titleLabel; 
 	private JLabel otherNamesLabel;
-	
-	// changed to JTextField.
-//	private JTextPane myMessagePane;
 	private JTextField myMessagePane;
 	
 	
@@ -56,6 +55,10 @@ public class ChatUI extends JFrame{
 		createAndShowGUI(panel);
 	}
 	
+	
+
+	
+	
 	private void buttonAction() {
 		sendButton = new JButton("send");
 		exitButton = new JButton("exit");;
@@ -65,17 +68,11 @@ public class ChatUI extends JFrame{
 		
 		sendButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 // add listener stuff, some get data from myMessagePane for this button.
-	        	 // might want to build XML-message here, or it could be constructed by the string sent.
-	        	 
-	        	 String text = myMessagePane.getText();
-	        	 
-	        	 communicationsHandler.send(userName + ": " + text);
-	        	 myMessagePane.setText("");
-	        	 updateMessageArea("You: " + text + "\n");
-
+	           	 sendMessage();
 	         }
 	      });
+		
+		
 		
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
@@ -108,6 +105,28 @@ public class ChatUI extends JFrame{
 		myMessagePane = new JTextField();
 
 		
+		
+		//make myMessagePane listen to enters and send message if pressed. might better be defined elsewhere
+		myMessagePane.addKeyListener(new KeyListener() {
+			
+			public void keyTyped(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void keyReleased(KeyEvent e) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			public void keyPressed(KeyEvent e) {
+		        if (e.getKeyCode()==KeyEvent.VK_ENTER){
+		        	sendMessage();
+		        }
+		    
+
+		    }
+		});
 		
 		panel.setLayout(new GridBagLayout());
 		GridBagConstraints c = new GridBagConstraints(); 
@@ -159,6 +178,18 @@ public class ChatUI extends JFrame{
 	    //Display the window.
 		this.pack();
 		this.setVisible(true);
+		
+		
+	}
+	
+	private void sendMessage() {
+		// might want to build XML-message here, or it could be constructed in client/server with the string sent.
+		String text = myMessagePane.getText();
+		      	 
+		communicationsHandler.send(userName + ": " + text);
+		myMessagePane.setText("");
+		updateMessageArea("You: " + text + "\n");
+
 	}
 	
 	public void updateMessageArea(String msg) {

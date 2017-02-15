@@ -32,9 +32,8 @@ public class IntroUI extends JFrame{
 	private JLabel radioButtonCaesarLabel = new JLabel("Caesar encryption");
 	
 	
-	//textpanes have no good methods for getting written text, changed to jtextfield for now. 
-//	private JTextPane namePane = new JTextPane();
-	private JTextField namePane = new JTextField();
+
+	private JTextPane namePane = new JTextPane();
 	private JTextPane adressPane = new JTextPane();	
 	private JTextPane portPane = new JTextPane();	
 	

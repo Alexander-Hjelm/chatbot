@@ -32,7 +32,11 @@ public class Program{
 //		Server server = new Server(4444);
 //		Client client = new Client(4444);
 		
+//		XmlParser xmlParser = new XmlParser();
+//		xmlParser.test();
+		
 		IntroUI introUI = new IntroUI();
+
 //		ChatUI chatUI = new ChatUI(null, null);
 		
 		

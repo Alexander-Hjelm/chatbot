@@ -25,7 +25,7 @@ public class Client extends CommunicationsHandler{
 	}
 	
 	public void connect(String Adress, int port) throws UnknownHostException, IOException {
-		s = new Socket("84.216.231.127", 4444);
+		s = new Socket("localhost", 4444);
 		startThread();
 	}
 
