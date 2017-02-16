@@ -6,14 +6,17 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
+import javax.swing.JFrame;
+
 
 public class Client extends CommunicationsHandler{
 
 	private int destinationPort;
-	private Socket s;
+	private Socket socket;
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
+	private Thread t;
 
 	
 
@@ -25,7 +28,7 @@ public class Client extends CommunicationsHandler{
 	}
 	
 	public void connect(String Adress, int port) throws UnknownHostException, IOException {
-		s = new Socket("localhost", 4444);
+		socket = new Socket("localhost", 4444);
 		startThread();
 	}
 
@@ -36,11 +39,18 @@ public class Client extends CommunicationsHandler{
 			
 			try {
 				
-				streamIn = new DataInputStream(s.getInputStream());
+				//if server has closed socket:
+				if(socket.isClosed()){
+					t.interrupt();
+					exit();
+				}
+			
+				
+				streamIn = new DataInputStream(socket.getInputStream());
 				String msgIn = streamIn.readUTF();
-				
-				
 				UI.updateMessageArea(msgIn + "\n");
+
+				
 				
 				
 				
@@ -61,7 +71,7 @@ public class Client extends CommunicationsHandler{
 		try {
 			
 			
-			streamOut = new DataOutputStream(s.getOutputStream());
+			streamOut = new DataOutputStream(socket.getOutputStream());
 			streamOut.writeUTF(msg);
 			streamOut.flush();
 		} catch (IOException e) {
@@ -69,8 +79,29 @@ public class Client extends CommunicationsHandler{
 		}
 	}
 	
-	
+	@Override
 	public void setUI(ChatUI UI) {
 		this.UI = UI;
+	}
+
+	@Override
+	public void exit() {
+		
+		try {
+			socket.close();
+			System.exit(0);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	@Override
+	protected void startThread() {
+		this.t = new Thread(this);
+		t.start();
+		
+		
 	}
 }

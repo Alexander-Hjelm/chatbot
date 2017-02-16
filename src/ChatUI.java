@@ -4,6 +4,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -37,15 +39,14 @@ public class ChatUI extends JFrame{
 	private JFileChooser fileChooser;
 	private FileReceiverUI fileReceiverUI;
 	private SendFileUI sendFileUI;
-	private String userName;
-	private String communicationType;
+	private MyData myData;
 	
 	
-	public ChatUI(CommunicationsHandler communicationsHandlerIn, String UserNameIn, String communicationTypeIn) {
+	
+	public ChatUI(CommunicationsHandler communicationsHandlerIn, MyData myDataIn) {
 		super("Chat Window");
 		this.communicationsHandler = communicationsHandlerIn;
-		this.userName = UserNameIn;
-		this.communicationType = communicationTypeIn;
+		this.myData = myDataIn;
 		
 		// tell communicationsHandler, client or server that this ChatUI is their UI:
 		communicationsHandler.setUI(this);
@@ -76,6 +77,7 @@ public class ChatUI extends JFrame{
 		
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
+	            communicationsHandler.exit();
 	            System.exit(0);
 	         }
 	      });
@@ -100,7 +102,7 @@ public class ChatUI extends JFrame{
 		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
-		titleLabel = new JLabel(communicationType + ": " + userName); 
+		titleLabel = new JLabel(myData.communicationType + ": " + myData.userName); 
 		otherNamesLabel  = new JLabel();
 		myMessagePane = new JTextField();
 
@@ -170,7 +172,19 @@ public class ChatUI extends JFrame{
 		
 		
 	    //Create and set up the window.
-		this.setDefaultCloseOperation(communicationsHandler.exit());
+        this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+        this.addWindowListener( new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+            	
+            	communicationsHandler.exit();
+            	
+                JFrame frame = (JFrame)e.getSource();
+                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+            }
+        });
 	  
 	    //Add contents to the window.
 		this.add(panel);
@@ -186,7 +200,7 @@ public class ChatUI extends JFrame{
 		// might want to build XML-message here, or it could be constructed in client/server with the string sent.
 		String text = myMessagePane.getText();
 		      	 
-		communicationsHandler.send(userName + ": " + text);
+		communicationsHandler.send(myData.userName + ": " + text);
 		myMessagePane.setText("");
 		updateMessageArea("You: " + text + "\n");
 

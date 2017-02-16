@@ -20,6 +20,7 @@ import javax.swing.border.EmptyBorder;
 public class IntroUI extends JFrame{
 
 	private JPanel panel;
+	private MyData myData;
 
 	//Panel elements
 	private JLabel titleLabel = new JLabel("Chat Program");
@@ -128,14 +129,27 @@ public class IntroUI extends JFrame{
 	private void createChatUI() {
 		//Create a chatUI and assign to it a server or client depending on user selection
 		ChatUI chatUI;
+		
+		//for myData:
 		String userName = namePane.getText();
+		String address = adressPane.getText();
+		// might be too early to set key, unless ceasar-encrypt?
+		String key = "temp";
+		// ought to be set to true/false in listeners to the encryption-buttons.
+		boolean aes = true;
+		
+		
 		
 		try {
 			if (serverRadioButton.isSelected()) {
-					chatUI = new ChatUI(new Server(4444), userName, "Server");
+				myData = new MyData(userName,address,key,aes,"Server");
+				
+				chatUI = new ChatUI(new Server(4444), myData);
 			}
 			else if (clientRadioButton.isSelected()) {
-				chatUI = new ChatUI(new Client(4444), userName, "Client");
+				myData = new MyData(userName,address,key,aes,"Client");
+				
+				chatUI = new ChatUI(new Client(4444), myData);
 			}
 			
 			this.dispose();
