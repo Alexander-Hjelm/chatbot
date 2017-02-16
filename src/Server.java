@@ -1,5 +1,8 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,7 +25,7 @@ public Server(int portIn) throws IOException {
 	
 	public void startServer() throws IOException {
 		this.server = new ServerSocket((int) port);
-		//Wait for an incoming connection
+		//Wait for an incoming connection	
 		socket = server.accept();
 		startThread();
 	}
@@ -36,27 +39,26 @@ public Server(int portIn) throws IOException {
 		while (true) {
 			//Listen for messages from client
 			
+			
 			try {
 				
-				//if client has disconnected, stop.
-				if(socket.isClosed()){
-					t.interrupt();
-				}
-
-				streamIn = new DataInputStream(socket.getInputStream());
+				
+				
+				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser();
 				Message msg = xmlParser.xmlStringToMessage(xml);
-				
 				UI.updateMessageArea(msg);
-	
+				
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+			
+			
 			
 		}
 	}	
@@ -67,7 +69,7 @@ public Server(int portIn) throws IOException {
 			XmlParser xmlParser = new XmlParser();
 			String xml = xmlParser.MessageToXmlString(msg);
 			
-			streamOut = new DataOutputStream(socket.getOutputStream());
+			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			streamOut.writeUTF(xml);
 			streamOut.flush();
 		} catch (IOException e) {
@@ -83,13 +85,20 @@ public Server(int portIn) throws IOException {
 	@Override
 	public void exit() {
 		
-		try {
-			server.close();
-			socket.close();
-			t.interrupt();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+
+			
+			try {
+				if(!socket.isClosed()){
+					socket.close();
+				}
+				server.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			System.exit(0);
+			
+
 		
 		
 	}

@@ -79,7 +79,7 @@ public class ChatUI extends JFrame{
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	            communicationsHandler.exit();
-	            System.exit(0);
+	            
 	         }
 	      });
 		

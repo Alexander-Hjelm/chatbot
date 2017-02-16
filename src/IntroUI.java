@@ -131,7 +131,16 @@ public class IntroUI extends JFrame{
 		//for myData:
 		String userName = namePane.getText();
 		String address = adressPane.getText();	// only for client, use "localhost" for testing
-		int port = Integer.parseInt(portPane.getText());
+		
+		//default to port 4444 the port-string is no good. 
+		int port;
+		try {
+			port = Integer.parseInt(portPane.getText());
+		} catch (NumberFormatException e1) {
+			port = 4444;
+//			e1.printStackTrace();
+		}
+		
 		// might be too early to set key, unless ceasar-encrypt?
 		String key = "temp";
 		// ought to be set to true/false in listeners to the encryption-buttons.

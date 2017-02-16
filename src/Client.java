@@ -1,5 +1,8 @@
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -34,8 +37,10 @@ public class Client extends CommunicationsHandler{
 			//Listen for messages from server
 			
 			try {
-
-				streamIn = new DataInputStream(socket.getInputStream());
+			
+				
+				
+				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser();
@@ -43,12 +48,9 @@ public class Client extends CommunicationsHandler{
 				
 				UI.updateMessageArea(msg);
 
-				//if server has closed socket:
-				if(socket.isClosed()){
-					t.interrupt();
-					exit();
-				}
-
+			
+					
+				
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -68,7 +70,7 @@ public class Client extends CommunicationsHandler{
 			XmlParser xmlParser = new XmlParser();
 			String xml = xmlParser.MessageToXmlString(msg);
 
-			streamOut = new DataOutputStream(socket.getOutputStream());
+			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			streamOut.writeUTF(xml);
 
 			streamOut.flush();
@@ -86,11 +88,15 @@ public class Client extends CommunicationsHandler{
 	public void exit() {
 		
 		try {
-			socket.close();
-			System.exit(0);
+			if(!socket.isClosed()){
+				socket.close();
+			}
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		System.exit(0);
+		
 		
 		
 	}
