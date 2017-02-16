@@ -5,7 +5,6 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
-
 public class Server extends CommunicationsHandler {
 
 	private int port;
@@ -14,6 +13,7 @@ public class Server extends CommunicationsHandler {
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
+	private Thread t;
 
 public Server(int portIn) throws IOException {
 	port = portIn;
@@ -38,17 +38,19 @@ public Server(int portIn) throws IOException {
 			
 			try {
 				
+				//if client has disconnected, stop.
+				if(socket.isClosed()){
+					t.interrupt();
+				}
+
 				streamIn = new DataInputStream(socket.getInputStream());
-				
-				
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser();
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				
 				UI.updateMessageArea(msg);
-				
-				
+	
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -73,8 +75,29 @@ public Server(int portIn) throws IOException {
 		}
 	}
 	
-	
+	@Override
 	public void setUI(ChatUI UI) {
 		this.UI = UI;
+	}
+
+	@Override
+	public void exit() {
+		
+		try {
+			server.close();
+			socket.close();
+			t.interrupt();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+		
+	}
+
+	@Override
+	protected void startThread() {
+		this.t = new Thread(this);
+		t.start();
+		
 	}
 }
