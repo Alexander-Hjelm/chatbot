@@ -16,15 +16,15 @@ public class Client extends CommunicationsHandler{
 
 	
 
-	public Client(int portIn) throws UnknownHostException, IOException {
+	public Client(String adress, int portIn) throws UnknownHostException, IOException {
 		destinationPort = portIn;
 		
 		//redundant method at the moment?
-		connect("localhost", destinationPort);
+		connect(adress, destinationPort);
 	}
 	
-	public void connect(String Adress, int port) throws UnknownHostException, IOException {
-		socket = new Socket("localhost", port);
+	public void connect(String adress, int port) throws UnknownHostException, IOException {
+		socket = new Socket(adress, port);
 		startThread();
 	}
 

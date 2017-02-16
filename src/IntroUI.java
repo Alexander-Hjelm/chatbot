@@ -130,7 +130,7 @@ public class IntroUI extends JFrame{
 		
 		//for myData:
 		String userName = namePane.getText();
-		String address = adressPane.getText();
+		String address = adressPane.getText();	// only for client, use "localhost" for testing
 		int port = Integer.parseInt(portPane.getText());
 		// might be too early to set key, unless ceasar-encrypt?
 		String key = "temp";
@@ -148,7 +148,7 @@ public class IntroUI extends JFrame{
 			}
 			else if (clientRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Client");
-				chatUI = new ChatUI(new Client(port), myData);
+				chatUI = new ChatUI(new Client(address, port), myData);
 			}
 			
 			this.dispose();
