@@ -203,7 +203,12 @@ public class ChatUI extends JFrame{
 		Message msg = new Message(text, myData.userName);
 		
 		communicationsHandler.send(msg);
-
+//							  _   _
+//		Check for xml errors,  \o/
+		XmlParser xmlParser = new XmlParser(); 
+		String outText = xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(msg)).text;
+		msg.text = outText;
+		
 		myMessagePane.setText("");
 		updateMessageArea(msg);
 

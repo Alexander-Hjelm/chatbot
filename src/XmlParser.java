@@ -12,7 +12,12 @@ public class XmlParser {
 
 	public Message xmlStringToMessage (String xml) {
 		//build a Message from an xml string
-		Document xmlDoc = buildXMLDocumentFromString(xml);
+		Document xmlDoc = null;
+		try { 
+			xmlDoc = buildXMLDocumentFromString(xml);
+		} catch (SAXException | IOException | ParserConfigurationException e) {
+			return new Message("ERROR: XML error at sender. Message is not shown", "System");
+		}
 		
 		xmlDoc.getElementsByTagName("text").item(0).getTextContent();
 		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
@@ -34,18 +39,13 @@ public class XmlParser {
 				;
 	}
 	
-	private Document buildXMLDocumentFromString(String xml) {
+	private Document buildXMLDocumentFromString(String xml) throws SAXException, IOException, ParserConfigurationException {
 		//parse an xml string into a org.w3c.dom.Document
 		DocumentBuilder newDocumentBuilder;
-		try {
-			//From StackOverflow
-			newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-			Document parse = newDocumentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
-			return parse;
-		} catch (SAXException | IOException | ParserConfigurationException e) {
-			e.printStackTrace();
-		}
-		return null;
+		//From StackOverflow
+		newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+		Document parse = newDocumentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
+		return parse;
 	}
 	
 //	public void test() {
