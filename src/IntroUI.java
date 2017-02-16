@@ -131,6 +131,7 @@ public class IntroUI extends JFrame{
 		//for myData:
 		String userName = namePane.getText();
 		String address = adressPane.getText();
+		int port = Integer.parseInt(portPane.getText());
 		// might be too early to set key, unless ceasar-encrypt?
 		String key = "temp";
 		// ought to be set to true/false in listeners to the encryption-buttons.
@@ -143,11 +144,11 @@ public class IntroUI extends JFrame{
 		try {
 			if (serverRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Server");
-				chatUI = new ChatUI(new Server(4444), myData);
+				chatUI = new ChatUI(new Server(port), myData);
 			}
 			else if (clientRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Client");
-				chatUI = new ChatUI(new Client(4444), myData);
+				chatUI = new ChatUI(new Client(port), myData);
 			}
 			
 			this.dispose();
