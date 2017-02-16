@@ -1,10 +1,6 @@
-import java.awt.Panel;
 import java.io.IOException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-
-import javax.swing.JFrame;
-import javax.swing.JPanel;
 
 
 public class Program{

@@ -1,5 +1,3 @@
-import java.awt.Color;
-
 public class MyData {
 	protected String userName;
 	protected String address;

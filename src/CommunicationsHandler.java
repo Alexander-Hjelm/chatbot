@@ -1,5 +1,3 @@
-import javax.swing.JFrame;
-
 public abstract class CommunicationsHandler implements Runnable{
 
 //	private ChatUI chatUi;
