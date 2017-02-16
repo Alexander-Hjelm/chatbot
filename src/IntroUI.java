@@ -86,7 +86,7 @@ public class IntroUI extends JFrame{
 	         public void actionPerformed(ActionEvent e) {
 	        	 //Create a new client or server, and assign that to a new ChatUI
 	        	 //ChatUI now has control
-	        	 createChatUI(); 
+	        	 createChatUI();
 	         }
 	      });
 		
@@ -130,12 +130,14 @@ public class IntroUI extends JFrame{
 		ChatUI chatUI;
 		String userName = namePane.getText();
 		
+		MyData myData = new MyData(userName, "", "", false);
+		
 		try {
 			if (serverRadioButton.isSelected()) {
-					chatUI = new ChatUI(new Server(4444), userName, "Server");
+					chatUI = new ChatUI(new Server(4444), myData, "Server");
 			}
 			else if (clientRadioButton.isSelected()) {
-				chatUI = new ChatUI(new Client(4444), userName, "Client");
+				chatUI = new ChatUI(new Client(4444), myData, "Client");
 			}
 			
 			this.dispose();

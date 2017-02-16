@@ -37,10 +37,12 @@ public class Client extends CommunicationsHandler{
 			try {
 				
 				streamIn = new DataInputStream(s.getInputStream());
-				String msgIn = streamIn.readUTF();
+				String xml = streamIn.readUTF();
 				
+				XmlParser xmlParser = new XmlParser();
+				Message msg = xmlParser.xmlStringToMessage(xml);
 				
-				UI.updateMessageArea(msgIn + "\n");
+				UI.updateMessageArea(msg);
 				
 				
 				
@@ -57,12 +59,13 @@ public class Client extends CommunicationsHandler{
 	
 	
 	@Override
-	public void send(String msg) {
+	public void send(Message msg) {
 		try {
-			
+			XmlParser xmlParser = new XmlParser();
+			String xml = xmlParser.MessageToXmlString(msg);
 			
 			streamOut = new DataOutputStream(s.getOutputStream());
-			streamOut.writeUTF(msg);
+			streamOut.writeUTF(xml);
 			streamOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

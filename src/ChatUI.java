@@ -37,14 +37,15 @@ public class ChatUI extends JFrame{
 	private JFileChooser fileChooser;
 	private FileReceiverUI fileReceiverUI;
 	private SendFileUI sendFileUI;
-	private String userName;
 	private String communicationType;
+
+	private MyData myData;
 	
 	
-	public ChatUI(CommunicationsHandler communicationsHandlerIn, String UserNameIn, String communicationTypeIn) {
+	public ChatUI(CommunicationsHandler communicationsHandlerIn, MyData myData, String communicationTypeIn) {
 		super("Chat Window");
 		this.communicationsHandler = communicationsHandlerIn;
-		this.userName = UserNameIn;
+		this.myData = myData;
 		this.communicationType = communicationTypeIn;
 		
 		// tell communicationsHandler, client or server that this ChatUI is their UI:
@@ -100,7 +101,7 @@ public class ChatUI extends JFrame{
 		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
-		titleLabel = new JLabel(communicationType + ": " + userName); 
+		titleLabel = new JLabel(communicationType + ": " + myData.userName); 
 		otherNamesLabel  = new JLabel();
 		myMessagePane = new JTextField();
 
@@ -185,17 +186,17 @@ public class ChatUI extends JFrame{
 	private void sendMessage() {
 		// might want to build XML-message here, or it could be constructed in client/server with the string sent.
 		String text = myMessagePane.getText();
-		      	 
-		communicationsHandler.send(userName + ": " + text);
+		
+		Message msg = new Message(text, myData.userName);
+		
+		communicationsHandler.send(msg);
 		myMessagePane.setText("");
-		updateMessageArea("You: " + text + "\n");
+		updateMessageArea(msg);
 
 	}
 	
-	public void updateMessageArea(String msg) {
-		this.messageArea.append(msg);
-		
+	public void updateMessageArea(Message msg) {
+		this.messageArea.append(msg.sender + ": " + msg.text + "\n");
 	}
-	
 
 }

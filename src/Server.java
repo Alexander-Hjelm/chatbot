@@ -41,10 +41,12 @@ public Server(int portIn) throws IOException {
 				streamIn = new DataInputStream(socket.getInputStream());
 				
 				
-				String msgIn = streamIn.readUTF();
+				String xml = streamIn.readUTF();
 				
+				XmlParser xmlParser = new XmlParser();
+				Message msg = xmlParser.xmlStringToMessage(xml);
 				
-				UI.updateMessageArea(msgIn + "\n");
+				UI.updateMessageArea(msg);
 				
 				
 				
@@ -58,12 +60,13 @@ public Server(int portIn) throws IOException {
 	}	
 	
 	@Override
-	public void send(String msg) {
+	public void send(Message msg) {
 		try {
-			
+			XmlParser xmlParser = new XmlParser();
+			String xml = xmlParser.MessageToXmlString(msg);
 			
 			streamOut = new DataOutputStream(socket.getOutputStream());
-			streamOut.writeUTF(msg);
+			streamOut.writeUTF(xml);
 			streamOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();

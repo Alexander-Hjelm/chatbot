@@ -8,7 +8,7 @@ public class CommunicationsHandler implements Runnable{
 		// Override this
 	}
 	
-	public void send(String message) {
+	public void send(Message msg) {
 		// Override this
 	}
 	
