@@ -46,6 +46,8 @@ public class Client extends CommunicationsHandler{
 				XmlParser xmlParser = new XmlParser();
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				
+				
+				
 				UI.updateMessageArea(msg);
 
 			
@@ -87,14 +89,19 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void exit() {
 		
-		try {
-			if(!socket.isClosed()){
-				socket.close();
-			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		//bygg disconnect Message
+		//skicka till server
+		//hejdå
+		UI.send()
+		
+//		try {
+//			if(!socket.isClosed()){
+//				socket.close();
+//			}
+//		} catch (IOException e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 		System.exit(0);
 		
 		
