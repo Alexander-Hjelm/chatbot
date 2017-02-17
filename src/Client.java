@@ -92,7 +92,7 @@ public class Client extends CommunicationsHandler{
 		//bygg disconnect Message
 		//skicka till server
 		//hejdå
-		UI.send()
+		//UI.send()
 		
 //		try {
 //			if(!socket.isClosed()){
