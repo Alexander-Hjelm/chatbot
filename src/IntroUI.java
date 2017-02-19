@@ -32,7 +32,6 @@ public class IntroUI extends JFrame{
 	private JLabel radioButtonAesLabel  = new JLabel("Aes encryption");
 	private JLabel radioButtonCaesarLabel = new JLabel("Caesar encryption");
 	private JColorChooser colorChooser = new JColorChooser();
-	
 
 	private JTextPane namePane = new JTextPane();
 	private JTextPane adressPane = new JTextPane();	
@@ -111,6 +110,7 @@ public class IntroUI extends JFrame{
 		panel.add(cryptoButtonPanel);
 		
 		panel.add(colorChooser);
+		colorChooser.setColor(Color.BLACK);
 		
 		panel.add(jButtonPanel);
 		
