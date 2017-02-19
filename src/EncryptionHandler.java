@@ -18,6 +18,8 @@ public class EncryptionHandler {
 		
 	}
 	
+	
+	//hex
 	public String getHexFromByte(byte[] b){
 	    return String.format("%x", new BigInteger(1, b));
 	}

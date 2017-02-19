@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -90,20 +91,10 @@ public class Client extends CommunicationsHandler{
 
 	@Override
 	public void exit() {
+		Message exitMsg = new Message("has logged off.", myData.userName, myData.color, false);
+		send(exitMsg);
 		
-		//bygg disconnect Message
-		//skicka till server
-		//hejdå
-		//UI.send()
 		
-//		try {
-//			if(!socket.isClosed()){
-//				socket.close();
-//			}
-//		} catch (IOException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
 		System.exit(0);
 		
 		

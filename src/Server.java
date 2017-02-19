@@ -44,14 +44,20 @@ public Server(int portIn, MyData myData) throws IOException {
 			
 			try {
 				
-				
-				
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				UI.updateMessageArea(msg);
+				
+				//check if client logged off.
+				if(!msg.connected){
+					streamIn.close();
+					streamOut.close();
+					socket.close();
+					break;
+				}
 				
 				
 			} catch (UnknownHostException e) {
@@ -87,17 +93,6 @@ public Server(int portIn, MyData myData) throws IOException {
 	@Override
 	public void exit() {
 		
-
-			
-			try {
-				if(!socket.isClosed()){
-					socket.close();
-				}
-				server.close();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
 			System.exit(0);
 			
 
