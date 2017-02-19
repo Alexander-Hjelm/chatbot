@@ -77,16 +77,4 @@ public class XmlParser {
 		return outStr;
 	}
 	
-//	public void test() {
-//		Message message = xmlStringToMessage("<message><text>fuk aff</text><sender>Viktor</sender></message>");
-//		System.out.println(message.text);
-//		System.out.println(message.sender);
-//		
-//		String xml = MessageToXmlString(new Message("ty same", "Alexader"));
-//		System.out.println(xml);
-//		
-//		message = xmlStringToMessage(xml);
-//		System.out.println(message.text);
-//		System.out.println(message.sender);
-//	}
 }
