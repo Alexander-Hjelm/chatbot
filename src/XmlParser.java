@@ -103,7 +103,7 @@ public class XmlParser {
 		g = Integer.parseInt(colorStr.substring(indexG + 2, colorStr.indexOf(",", indexG) ));	
 		b = Integer.parseInt(colorStr.substring(indexB + 2, colorStr.indexOf("]", indexB) ));
 		
-		return new Color(r,b,g);
+		return new Color(r,g,b);
 	}
 	
 }
