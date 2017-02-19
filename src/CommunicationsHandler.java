@@ -1,5 +1,9 @@
 public abstract class CommunicationsHandler implements Runnable{
-
+	
+	//can only be instantiated by server and client
+	protected CommunicationsHandler(){
+		
+	}
 //	private ChatUI chatUi;
 
 	public abstract void run();

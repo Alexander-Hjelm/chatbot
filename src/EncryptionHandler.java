@@ -18,6 +18,16 @@ public class EncryptionHandler {
 		
 	}
 	
+	public String getHexFromByte(byte[] b){
+	    return String.format("%x", new BigInteger(1, b));
+	}
+	
+	public String getStringFromHex(String hexString){
+		byte[] b = new BigInteger(hexString,16).toByteArray();
+		String retStr = new String(b, StandardCharsets.UTF_8);	
+		return retStr;
+	}
+	
 	private int generateCaesarKey() {
 		int key = (int) Math.random() * 10000;
 		return key;
@@ -30,15 +40,7 @@ public class EncryptionHandler {
 	}
 	
 	
-	public String getHexFromByte(byte[] b){
-	    return String.format("%x", new BigInteger(1, b));
-	}
-	
-	public String getStringFromHex(String hexString){
-		byte[] b = new BigInteger(hexString,16).toByteArray();
-		String retStr = new String(b, StandardCharsets.UTF_8);	
-		return retStr;
-	}
+
 	
 	private String encryptCaesar(String inputString) {
 //		
