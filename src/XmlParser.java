@@ -23,11 +23,20 @@ public class XmlParser {
 		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
 		String sender = xmlDoc.getElementsByTagName("sender").item(0).getTextContent();;
 		
+		//de-ecsape necessary fields here
+		text = deEscapeXMLChars(text);
+		sender = deEscapeXMLChars(sender);
+				
 		return new Message(text, sender);
 	}
 	
 	public String MessageToXmlString (Message message) {
 		//build an xml String from a message
+		
+		//escape necessary fields here, to handle usage of XML-specific characters
+		message.text = escapeXMLChars(message.text);
+		message.sender = escapeXMLChars(message.sender);
+		
 		return  "<message>"
 					+ "<text>"
 						+ message.text
@@ -46,6 +55,26 @@ public class XmlParser {
 		newDocumentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
 		Document parse = newDocumentBuilder.parse(new ByteArrayInputStream(xml.getBytes()));
 		return parse;
+	}
+	
+	private String escapeXMLChars(String inputStr) {
+		String outStr = inputStr;
+		outStr = outStr.replace("&", "&amp;");	//Needs to be first
+		outStr = outStr.replace("<", "&lt;");
+		outStr = outStr.replace(">", "&gt;");
+		outStr = outStr.replace("\"", "&quot;");
+		outStr = outStr.replace("'", "&apos;");
+		return outStr;
+	}
+	
+	private String deEscapeXMLChars(String inputStr) {
+		String outStr = inputStr;
+		outStr = outStr.replace("&amp;", "&");	//Needs to be first
+		outStr = outStr.replace("&lt;", "<");
+		outStr = outStr.replace("&gt;", ">");
+		outStr = outStr.replace("&quot;", "\"");
+		outStr = outStr.replace("&apos;", "'");
+		return outStr;
 	}
 	
 //	public void test() {
