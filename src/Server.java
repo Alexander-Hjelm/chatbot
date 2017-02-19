@@ -17,13 +17,15 @@ public class Server extends CommunicationsHandler {
 	private DataOutputStream streamOut;
 	private ChatUI UI;
 	private Thread t;
+	private MyData myData;
 
-public Server(int portIn) throws IOException {
+public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;
 	startServer();
 } 	
 	
 	public void startServer() throws IOException {
+		this.myData = myData;
 		this.server = new ServerSocket((int) port);
 		//Wait for an incoming connection	
 		socket = server.accept();
@@ -47,7 +49,7 @@ public Server(int portIn) throws IOException {
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
-				XmlParser xmlParser = new XmlParser();
+				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				UI.updateMessageArea(msg);
 				
@@ -66,7 +68,7 @@ public Server(int portIn) throws IOException {
 	@Override
 	public void send(Message msg) {
 		try {
-			XmlParser xmlParser = new XmlParser();
+			XmlParser xmlParser = new XmlParser(myData);
 			String xml = xmlParser.MessageToXmlString(msg);
 			
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));

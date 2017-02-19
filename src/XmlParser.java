@@ -10,13 +10,19 @@ import org.xml.sax.SAXException;
 
 public class XmlParser {
 
+	private MyData myData;
+	
+	public XmlParser(MyData myData) {
+		this.myData = myData;
+	}
+	
 	public Message xmlStringToMessage (String xml) {
 		//build a Message from an xml string
 		Document xmlDoc = null;
 		try { 
 			xmlDoc = buildXMLDocumentFromString(xml);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			return new Message("ERROR: XML error at sender. Message is not shown", "System");
+			return new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color.toString());
 		}
 		
 		xmlDoc.getElementsByTagName("text").item(0).getTextContent();
@@ -27,7 +33,7 @@ public class XmlParser {
 		text = deEscapeXMLChars(text);
 		sender = deEscapeXMLChars(sender);
 				
-		return new Message(text, sender);
+		return new Message(text, sender, myData.color.toString());
 	}
 	
 	public String MessageToXmlString (Message message) {

@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -6,6 +7,7 @@ import java.io.IOException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
+import javax.swing.JColorChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -29,7 +31,7 @@ public class IntroUI extends JFrame{
 	private JLabel radioButtonServerLabel = new JLabel("Server");
 	private JLabel radioButtonAesLabel  = new JLabel("Aes encryption");
 	private JLabel radioButtonCaesarLabel = new JLabel("Caesar encryption");
-	
+	private JColorChooser colorChooser = new JColorChooser();
 	
 
 	private JTextPane namePane = new JTextPane();
@@ -107,6 +109,9 @@ public class IntroUI extends JFrame{
 		panel.add(portPane);
 		
 		panel.add(cryptoButtonPanel);
+		
+		panel.add(colorChooser);
+		
 		panel.add(jButtonPanel);
 		
 		createAndShowGUI(panel);
@@ -131,6 +136,7 @@ public class IntroUI extends JFrame{
 		//for myData:
 		String userName = namePane.getText();
 		String address = adressPane.getText();	// only for client, use "localhost" for testing
+		Color color = colorChooser.getColor();
 		
 		//default to port 4444 the port-string is no good. 
 		int port;
@@ -148,16 +154,16 @@ public class IntroUI extends JFrame{
 		
 		
 		
-		MyData myData = new MyData(userName, "", "", false, "");
+		MyData myData;
 		
 		try {
 			if (serverRadioButton.isSelected()) {
-				myData = new MyData(userName,address,key,aes,"Server");
-				chatUI = new ChatUI(new Server(port), myData);
+				myData = new MyData(userName,address,key,aes,"Server", color);
+				chatUI = new ChatUI(new Server(port, myData), myData);
 			}
 			else if (clientRadioButton.isSelected()) {
-				myData = new MyData(userName,address,key,aes,"Client");
-				chatUI = new ChatUI(new Client(address, port), myData);
+				myData = new MyData(userName,address,key,aes,"Client", color);
+				chatUI = new ChatUI(new Client(address, port, myData), myData);
 			}
 			
 			this.dispose();

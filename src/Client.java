@@ -16,10 +16,12 @@ public class Client extends CommunicationsHandler{
 	private DataOutputStream streamOut;
 	private ChatUI UI;
 	private Thread t;
+	private MyData myData;
 
 	
 
-	public Client(String adress, int portIn) throws UnknownHostException, IOException {
+	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
+		this.myData = myData;
 		destinationPort = portIn;
 		
 		//redundant method at the moment?
@@ -43,7 +45,7 @@ public class Client extends CommunicationsHandler{
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
-				XmlParser xmlParser = new XmlParser();
+				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				
 				
@@ -69,7 +71,7 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void send(Message msg) {
 		try {
-			XmlParser xmlParser = new XmlParser();
+			XmlParser xmlParser = new XmlParser(myData);
 			String xml = xmlParser.MessageToXmlString(msg);
 
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
