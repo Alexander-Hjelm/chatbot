@@ -15,6 +15,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.JTextPane;
+import javax.swing.text.AttributeSet;
+import javax.swing.text.BadLocationException;
+import javax.swing.text.SimpleAttributeSet;
+import javax.swing.text.StyleConstants;
+import javax.swing.text.StyleContext;
 
 
 
@@ -24,7 +30,7 @@ public class ChatUI extends JFrame{
 	private CommunicationsHandler communicationsHandler;
 
 	private JPanel panel;
-	private JTextArea messageArea;
+	private JTextPane messageArea;
 	private JScrollPane messageScrollPane;
 	private JLabel titleLabel; 
 	private JLabel otherNamesLabel;
@@ -99,7 +105,7 @@ public class ChatUI extends JFrame{
 
 	private void createAndShowGUI(JPanel panel) {
 		
-		messageArea = new JTextArea();
+		messageArea = new JTextPane();
 		messageArea.setEditable(false);
 		
 		messageScrollPane = new JScrollPane(messageArea);
@@ -215,7 +221,21 @@ public class ChatUI extends JFrame{
 	}
 	
 	public void updateMessageArea(Message msg) {
-		this.messageArea.append(msg.sender + ": " + msg.text + "\n");
+		//Set text color
+        StyleContext sc = StyleContext.getDefaultStyleContext();
+        AttributeSet aset = sc.addAttribute(SimpleAttributeSet.EMPTY, StyleConstants.Foreground, msg.color);
+
+        int len = messageArea.getDocument().getLength();
+    	String appendStr = msg.sender + ": " + msg.text + "\n";
+        
+    	//Print text in MessageArea
+        try {
+			messageArea.getDocument().insertString(len, appendStr, aset);
+		} catch (BadLocationException e) {
+			e.printStackTrace();
+		}
+		
+//		this.messageArea.append(msg.sender + ": " + msg.text + "\n");
 	}
 
 }
