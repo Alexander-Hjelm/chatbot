@@ -1,10 +1,11 @@
+import java.awt.Color;
 
 public class Message {
 	public String text;
 	public String sender;
-	public String color;
+	public Color color;
 	
-	public Message(String text, String sender, String color) {
+	public Message(String text, String sender, Color color) {
 		this.text = text;
 		this.sender = sender;
 		this.color = color;

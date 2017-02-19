@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
@@ -22,20 +23,23 @@ public class XmlParser {
 		try { 
 			xmlDoc = buildXMLDocumentFromString(xml);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			return new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color.toString());
+			return new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color);
 		}
 		
 		xmlDoc.getElementsByTagName("text").item(0).getTextContent();
 		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
-		String sender = xmlDoc.getElementsByTagName("sender").item(0).getTextContent();;
+		String sender = xmlDoc.getElementsByTagName("sender").item(0).getTextContent();
+		String colorStr = xmlDoc.getElementsByTagName("color").item(0).getTextContent();
+		
+		Color color = buildColorFromString(colorStr);
 		
 		//de-ecsape necessary fields here
 		text = deEscapeXMLChars(text);
 		sender = deEscapeXMLChars(sender);
 				
-		return new Message(text, sender, myData.color.toString());
+		return new Message(text, sender, color);
 	}
-	
+
 	public String MessageToXmlString (Message message) {
 		//build an xml String from a message
 		
@@ -50,6 +54,9 @@ public class XmlParser {
 					+ "<sender>"
 						+ message.sender
 					+ "</sender>"
+					+ "<color>"
+						+ message.color.toString()
+					+ "</color>"
 				+ "</message>"
 				;
 	}
@@ -81,6 +88,22 @@ public class XmlParser {
 		outStr = outStr.replace("&quot;", "\"");
 		outStr = outStr.replace("&apos;", "'");
 		return outStr;
+	}
+	
+	private Color buildColorFromString(String colorStr) {
+		int r;
+		int g;
+		int b;
+		
+		int indexR = colorStr.indexOf("r=");
+		int indexG = colorStr.indexOf("g=");
+		int indexB = colorStr.indexOf("b=");
+		
+		r = Integer.parseInt(colorStr.substring(indexR + 2, colorStr.indexOf(",", indexR) ));
+		g = Integer.parseInt(colorStr.substring(indexG + 2, colorStr.indexOf(",", indexG) ));	
+		b = Integer.parseInt(colorStr.substring(indexB + 2, colorStr.indexOf("]", indexB) ));
+		
+		return new Color(r,b,g);
 	}
 	
 }

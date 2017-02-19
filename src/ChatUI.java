@@ -200,7 +200,7 @@ public class ChatUI extends JFrame{
 	private void sendMessage() {
 		// might want to build XML-message here, or it could be constructed in client/server with the string sent.
 		String text = myMessagePane.getText();
-		Message msg = new Message(text, myData.userName, myData.color.toString());
+		Message msg = new Message(text, myData.userName, myData.color);
 		
 		communicationsHandler.send(msg);
 //							  _   _
