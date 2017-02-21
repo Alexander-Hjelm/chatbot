@@ -1,13 +1,13 @@
 
 public class Keygen {
 	
-	private String generateCaesarKey() {
+	public String generateCaesarKey() {
 		int key = (int) (Math.random() * 10000);
 		return Integer.toString(key);
 	}
 
 	//dummy
-	private String generateAesKey(){
+	public String generateAesKey(){
 		return "";
 		
 	}
