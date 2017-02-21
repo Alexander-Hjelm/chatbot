@@ -69,7 +69,7 @@ public class XmlParser {
 		boolean isKeyResponseType = false;
 		if(!(connectionNode == null)){
 			isKeyResponseType = true;
-			key = myData.key;
+			key = xmlDoc.getElementsByTagName("key").item(0).getTextContent();	//Extract key from message
 		}
 		
 		//tried to find attributes, got fatal error.
