@@ -47,13 +47,28 @@ public class XmlParser {
 //		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0).getChildNodes();
 //		encrypted.getElementsByTagName(name)
 		
+		Node connectionNode;
+		
 		//check to see if there's an <disconnect\> tag. Assume connected, but if tag exist, change status. 
-		Node connectionNode = xmlDoc.getElementsByTagName("disconnect").item(0);
-		boolean connected = true;
+		connectionNode = xmlDoc.getElementsByTagName("disconnect").item(0);
+		boolean isDisconnectType = false;
 		if(!(connectionNode == null)){
-			connected = false;
+			isDisconnectType = true;
 		}
 		
+		//check to see if there's an <keyrequest\> tag. Assume connected, but if tag exist, change status. 
+		connectionNode = xmlDoc.getElementsByTagName("keyrequest").item(0);
+		boolean isKeyRequestType = false;
+		if(!(connectionNode == null)){
+			isKeyRequestType = true;
+		}
+		
+		//check to see if there's an <keyresponse\> tag. Assume connected, but if tag exist, change status. 
+		connectionNode = xmlDoc.getElementsByTagName("keyresponse").item(0);
+		boolean isKeyResponseType = false;
+		if(!(connectionNode == null)){
+			isKeyResponseType = true;
+		}
 		
 		//tried to find attributes, got fatal error.
 //		NodeList nl = (NodeList) xmlDoc.getElementsByTagName("disconnect");
@@ -66,11 +81,13 @@ public class XmlParser {
 		text = deEscapeXMLChars(text);
 		sender = deEscapeXMLChars(sender);
 		
-		MessageType messageType;
-		if (connected) {
-			messageType = MessageType.STANDARD;
-		} else {
+		MessageType messageType = MessageType.STANDARD;
+		if (isDisconnectType) {
 			messageType = MessageType.DISCONNECT;
+		} else if (isKeyRequestType){
+			messageType = MessageType.KEYREQUEST;
+		} else if (isKeyResponseType){
+			messageType = MessageType.KEYRESPONSE;
 		}
 		
 		Message outMsg = new Message(text, sender, color, messageType);
@@ -106,7 +123,14 @@ public class XmlParser {
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}
 		
+		if(message.messageType == MessageType.KEYREQUEST) {
+			//do stuff
+		}
 		
+		if(message.messageType == MessageType.KEYRESPONSE) {
+			//do stuff
+		}
+				
 		return  retStr;
 	}
 	
