@@ -10,16 +10,7 @@ public class EncryptionHandler {
 	
 	public EncryptionHandler(MyData myDataIn){
 		
-		this.myData = myDataIn;
-		
-		if(myData.aes){
-			//myData.key = generateAesKey()
-			//this.thisKey = generateAesKey()
-		} 
-		else {
-			this.thisShift = generateCaesarKey(); 
-		}
-		
+		this.myData = myDataIn;	
 		
 	}
 	
@@ -34,20 +25,6 @@ public class EncryptionHandler {
 		String retStr = new String(b, StandardCharsets.UTF_8);	
 		return retStr;
 	}
-	
-	//keys
-	private int generateCaesarKey() {
-		int key = (int) (Math.random() * 10000);
-		return key;
-	}
-
-	//dummy
-	private String generateAesKey(){
-		return "";
-		
-	}
-	
-	
 
 	//ciphers
 	public String encryptCaesar(String inputString) {
