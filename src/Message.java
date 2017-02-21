@@ -5,6 +5,9 @@ public class Message {
 	public String sender;
 	public Color color;
 	
+	public boolean isDisconnectType;
+	public boolean isKeyRequestType;
+	public boolean isKeyResponseType;
 	
 	public Message(String text, String sender, Color color) {
 		this.text = text;
@@ -13,9 +16,14 @@ public class Message {
 	}
 	
 	public void setDisconnectType( boolean boolIn ) {
+		isDisconnectType = boolIn;
 	}
 	
+	public void setKeyRequestType( boolean boolIn ) {
+		isDisconnectType = boolIn;
 	}
 	
+	public void setKeyResponseType( boolean boolIn ) {
+		isDisconnectType = boolIn;
 	}
 }
