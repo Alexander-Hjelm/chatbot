@@ -1,0 +1,7 @@
+
+public enum MessageType {
+	STANDARD,
+	DISCONNECT,
+	KEYREQUEST,
+	KEYRESPONSE
+}

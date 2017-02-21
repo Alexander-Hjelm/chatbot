@@ -66,9 +66,14 @@ public class XmlParser {
 		text = deEscapeXMLChars(text);
 		sender = deEscapeXMLChars(sender);
 		
-		Message outMsg = new Message(text, sender, color);
-		outMsg.setDisconnectType(!connected);
+		MessageType messageType;
+		if (connected) {
+			messageType = MessageType.STANDARD;
+		} else {
+			messageType = MessageType.DISCONNECT;
+		}
 		
+		Message outMsg = new Message(text, sender, color, messageType);
 		return outMsg;
 	}
 
@@ -96,7 +101,7 @@ public class XmlParser {
 					;
 		
 		//add disconnected tag if message contains connected = false.
-		if(message.isDisconnectType){
+		if(message.messageType == MessageType.DISCONNECT){
 			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}

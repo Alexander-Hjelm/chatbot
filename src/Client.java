@@ -55,8 +55,8 @@ public class Client extends CommunicationsHandler{
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
-				handleMessageType(msg);
 				UI.updateMessageArea(msg);
+				handleMessageType(msg);
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -69,7 +69,7 @@ public class Client extends CommunicationsHandler{
 	
 	private void handleMessageType(Message msg) throws IOException {
 		//Disconnect message
-		if(msg.isDisconnectType){
+		if(msg.messageType == MessageType.DISCONNECT){
 			serverUp = false;
 			System.out.println("Server down.");
 			exit();
@@ -101,8 +101,7 @@ public class Client extends CommunicationsHandler{
 		
 		//if connected to server.
 		if(serverUp) {
-			Message exitMsg = new Message("has logged off.", myData.userName, myData.color);
-			exitMsg.setDisconnectType(true);
+			Message exitMsg = new Message("has logged off.", myData.userName, myData.color, MessageType.DISCONNECT);
 			send(exitMsg);
 		}
 		

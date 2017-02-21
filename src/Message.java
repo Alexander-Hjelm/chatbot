@@ -5,25 +5,19 @@ public class Message {
 	public String sender;
 	public Color color;
 	
-	public boolean isDisconnectType;
-	public boolean isKeyRequestType;
-	public boolean isKeyResponseType;
+	public MessageType messageType;
 	
 	public Message(String text, String sender, Color color) {
 		this.text = text;
 		this.sender = sender;
 		this.color = color;
+		this.messageType = MessageType.STANDARD;	//Assume standard message type if nothing else is given.
 	}
 	
-	public void setDisconnectType( boolean boolIn ) {
-		isDisconnectType = boolIn;
-	}
-	
-	public void setKeyRequestType( boolean boolIn ) {
-		isDisconnectType = boolIn;
-	}
-	
-	public void setKeyResponseType( boolean boolIn ) {
-		isDisconnectType = boolIn;
+	public Message(String text, String sender, Color color, MessageType messageType) {
+		this.text = text;
+		this.sender = sender;
+		this.color = color;
+		this.messageType = messageType;
 	}
 }
