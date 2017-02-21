@@ -18,17 +18,19 @@ public class Server extends CommunicationsHandler {
 	private ChatUI UI;
 	private Thread t;
 	private MyData myData;
+	private boolean clientsConnected;
 
 public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;
+	this.myData = myData;
 	startServer();
 } 	
 	
 	public void startServer() throws IOException {
-		this.myData = myData;
+		
 		this.server = new ServerSocket((int) port);
-		//Wait for an incoming connection	
 		socket = server.accept();
+		clientsConnected = true;
 		startThread();
 	}
 	
@@ -38,11 +40,17 @@ public Server(int portIn, MyData myData) throws IOException {
 	
 	@Override
 	public void run() {
-		while (true) {
+
+		
+		while (t != null) {
 			//Listen for messages from client
+			//Wait for an incoming connection	
 			
+
 			
 			try {
+				
+
 				
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
@@ -53,10 +61,8 @@ public Server(int portIn, MyData myData) throws IOException {
 				
 				//check if client logged off.
 				if(!msg.connected){
-					streamIn.close();
-					streamOut.close();
-					socket.close();
-					break;
+					clientsConnected = false;
+					t = null;
 				}
 				
 				
@@ -73,7 +79,9 @@ public Server(int portIn, MyData myData) throws IOException {
 	
 	@Override
 	public void send(Message msg) {
+
 		try {
+			
 			XmlParser xmlParser = new XmlParser(myData);
 			String xml = xmlParser.MessageToXmlString(msg);
 			
@@ -91,14 +99,19 @@ public Server(int portIn, MyData myData) throws IOException {
 	}
 
 	@Override
-	public void exit() {
+	public void exit() throws IOException {
+		//kill thread, see while loop in run.
+		t = null;
 		
-			System.exit(0);
-			
+		//if clients are connected:
+		if(clientsConnected){
+			Message exitMsg = new Message(" - the server has logged off. Closing program.", myData.userName, myData.color, false);
+			send(exitMsg);
+		}
 
-		
-		
+		System.exit(0);
 	}
+
 
 	@Override
 	protected void startThread() {

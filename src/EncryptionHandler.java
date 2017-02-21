@@ -6,9 +6,14 @@ public class EncryptionHandler {
 	private String thisKey = null;
 	private int thisShift;
 	private int byteRange = 256;
+	private MyData myData;
 	
-	public EncryptionHandler(boolean aes){
-		if(aes){
+	public EncryptionHandler(MyData myDataIn){
+		
+		this.myData = myDataIn;
+		
+		if(myData.aes){
+			//myData.key = generateAesKey()
 			//this.thisKey = generateAesKey()
 		} 
 		else {
@@ -20,18 +25,19 @@ public class EncryptionHandler {
 	
 	
 	//hex
-	public String getHexFromByte(byte[] b){
+	private String getHexFromByte(byte[] b){
 	    return String.format("%x", new BigInteger(1, b));
 	}
 	
-	public String getStringFromHex(String hexString){
+	private String getStringFromHex(String hexString){
 		byte[] b = new BigInteger(hexString,16).toByteArray();
 		String retStr = new String(b, StandardCharsets.UTF_8);	
 		return retStr;
 	}
 	
+	//keys
 	private int generateCaesarKey() {
-		int key = (int) Math.random() * 10000;
+		int key = (int) (Math.random() * 10000);
 		return key;
 	}
 
@@ -43,9 +49,9 @@ public class EncryptionHandler {
 	
 	
 
+	//ciphers
+	public String encryptCaesar(String inputString) {
 	
-	private String encryptCaesar(String inputString) {
-//		
 		byte[] b = inputString.getBytes(StandardCharsets.UTF_8);	
 		
 		for (int i = 0; i < b.length; i++) {
@@ -62,7 +68,7 @@ public class EncryptionHandler {
 		return(outputString);
 	}
 	
-	private String decryptCaesar(String hexString) {
+	public String decryptCaesar(String hexString) {
 		
 		byte[] b = new BigInteger(hexString,16).toByteArray();
 		

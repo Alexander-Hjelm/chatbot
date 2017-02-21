@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
@@ -84,7 +85,11 @@ public class ChatUI extends JFrame{
 		
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	            communicationsHandler.exit();
+	            try {
+					communicationsHandler.exit();
+				} catch (IOException e1) {
+					e1.printStackTrace();
+				}
 	            
 	         }
 	      });
@@ -186,7 +191,12 @@ public class ChatUI extends JFrame{
             public void windowClosing(WindowEvent e)
             {
             	
-            	communicationsHandler.exit();
+            	try {
+					communicationsHandler.exit();
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
             	
                 JFrame frame = (JFrame)e.getSource();
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

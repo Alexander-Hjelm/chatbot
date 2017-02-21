@@ -7,6 +7,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
@@ -14,12 +15,19 @@ import org.xml.sax.SAXException;
 public class XmlParser {
 
 	private MyData myData;
+	private EncryptionHandler encryptionHandler;
 	
-	public XmlParser(MyData myData) {
-		this.myData = myData;
+	public XmlParser(MyData myDataIn) {
+		this.myData = myDataIn;
+		encryptionHandler = new EncryptionHandler(myData);
 	}
 	
 	public Message xmlStringToMessage (String xml) {
+		
+		//decrypt
+		
+		
+		
 		//build a Message from an xml string
 		Document xmlDoc = null;
 		try { 
@@ -32,6 +40,10 @@ public class XmlParser {
 		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
 		String sender = xmlDoc.getElementsByTagName("sender").item(0).getTextContent();
 		String colorStr = xmlDoc.getElementsByTagName("color").item(0).getTextContent();
+		
+		
+//		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0).getChildNodes();
+//		encrypted.getElementsByTagName(name)
 		
 		//check to see if there's an <disconnect\> tag. Assume connected, but if tag exist, change status. 
 		Node connectionNode = xmlDoc.getElementsByTagName("disconnect").item(0);
@@ -63,6 +75,7 @@ public class XmlParser {
 		message.sender = escapeXMLChars(message.sender);
 		
 		
+		
 		String retStr = 
 				"<message>"
 					+ "<text>"
@@ -82,6 +95,8 @@ public class XmlParser {
 			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}
+		
+		System.out.println(retStr);
 		
 		return  retStr;
 	}

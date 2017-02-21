@@ -18,6 +18,7 @@ public class Client extends CommunicationsHandler{
 	private ChatUI UI;
 	private Thread t;
 	private MyData myData;
+	private boolean serverUp;
 
 	
 
@@ -27,6 +28,9 @@ public class Client extends CommunicationsHandler{
 		
 		//redundant method at the moment?
 		connect(adress, destinationPort);
+		
+		//at the moment we can only connect while server is up:
+		serverUp = true;
 	}
 	
 	public void connect(String adress, int port) throws UnknownHostException, IOException {
@@ -36,7 +40,8 @@ public class Client extends CommunicationsHandler{
 
 	@Override
 	public void run() {
-		while (true) {
+		
+		while (t != null) {
 			//Listen for messages from server
 			
 			try {
@@ -48,10 +53,12 @@ public class Client extends CommunicationsHandler{
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
-				
-				
-				
 				UI.updateMessageArea(msg);
+				
+				if(!msg.connected){
+					serverUp = false;
+					t = null;
+				}
 
 			
 					
@@ -77,7 +84,6 @@ public class Client extends CommunicationsHandler{
 
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			streamOut.writeUTF(xml);
-
 			streamOut.flush();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -90,15 +96,23 @@ public class Client extends CommunicationsHandler{
 	}
 
 	@Override
-	public void exit() {
-		Message exitMsg = new Message("has logged off.", myData.userName, myData.color, false);
-		send(exitMsg);
+	public void exit() throws IOException {
+		t = null;
 		
+		//if connected to server.
+		if(serverUp) {
+			Message exitMsg = new Message("has logged off.", myData.userName, myData.color, false);
+			send(exitMsg);
+		}
 		
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		System.exit(0);
-		
-		
-		
+	
 	}
 
 	@Override
