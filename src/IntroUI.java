@@ -64,10 +64,12 @@ public class IntroUI extends JFrame{
 		clientServerButtonGroup = new ButtonGroup();
 		clientServerButtonGroup.add(clientRadioButton);
 		clientServerButtonGroup.add(serverRadioButton);
+		clientRadioButton.setSelected(true);
 		
 		cryptoButtonGroup = new ButtonGroup();
 		cryptoButtonGroup.add(aesRadioButton);
 		cryptoButtonGroup.add(caesarRadioButton);
+		aesRadioButton.setSelected(true);
 		
 		GridLayout cryptoButtonLayout = new GridLayout(0, 2);
 		JPanel cryptoButtonPanel = new JPanel(cryptoButtonLayout);
