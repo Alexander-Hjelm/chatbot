@@ -4,7 +4,6 @@ import java.nio.charset.StandardCharsets;
 public class EncryptionHandler {
 	
 	private String thisKey = null;
-	private int thisShift;
 	private int byteRange = 256;
 	private MyData myData;
 	
@@ -29,6 +28,8 @@ public class EncryptionHandler {
 	//ciphers
 	public String encryptCaesar(String inputString) {
 	
+		int key = Integer.parseInt(thisKey);
+		
 		byte[] b = inputString.getBytes(StandardCharsets.UTF_8);	
 		
 		for (int i = 0; i < b.length; i++) {
@@ -36,7 +37,7 @@ public class EncryptionHandler {
 
 			int current = b[i] & 0xff;
 			System.out.println("currentint " + current);
-			int shifted = ((current + thisShift) % byteRange);
+			int shifted = ((current + key) % byteRange);
 			b[i] = (byte) shifted;
 		}
 		
@@ -47,12 +48,14 @@ public class EncryptionHandler {
 	
 	public String decryptCaesar(String hexString) {
 		
+		int key = Integer.parseInt(thisKey);
+		
 		byte[] b = new BigInteger(hexString,16).toByteArray();
 		
 		for (int i = 0; i < b.length; i++) {
 			
 			int current = b[i] & 0xff;
-			int shifted = ((current - thisShift) % byteRange);
+			int shifted = ((current - key) % byteRange);
 			if (shifted < 0) {
 				shifted += byteRange;
 				}

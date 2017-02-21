@@ -1,9 +1,9 @@
 
 public class Keygen {
 	
-	private int generateCaesarKey() {
+	private String generateCaesarKey() {
 		int key = (int) (Math.random() * 10000);
-		return key;
+		return Integer.toString(key);
 	}
 
 	//dummy
