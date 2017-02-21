@@ -46,25 +46,14 @@ public Server(int portIn, MyData myData) throws IOException {
 			//Listen for messages from client
 			//Wait for an incoming connection	
 			
-
-			
 			try {
-				
-
-				
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
+				handleMessageType(msg);
 				UI.updateMessageArea(msg);
-				
-				//check if client logged off.
-				if(!msg.connected){
-					clientsConnected = false;
-					t = null;
-				}
-				
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -72,10 +61,16 @@ public Server(int portIn, MyData myData) throws IOException {
 				e.printStackTrace();
 			}
 			
-			
-			
 		}
 	}	
+	
+	private void handleMessageType(Message msg) throws IOException {
+		//Disconnect message
+		if(!msg.connected){
+			clientsConnected = false;
+			t = null;
+		}
+	}
 	
 	@Override
 	public void send(Message msg) {

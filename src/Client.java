@@ -50,25 +50,13 @@ public class Client extends CommunicationsHandler{
 			//Listen for messages from server
 			
 			try {
-			
-				
-				
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
+				handleMessageType(msg);
 				UI.updateMessageArea(msg);
-				
-				if(!msg.connected){
-					serverUp = false;
-					System.out.println("Server down.");
-					exit();
-				}
-
-			
-					
-				
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
@@ -79,9 +67,15 @@ public class Client extends CommunicationsHandler{
 		}
 	} 
 	
+	private void handleMessageType(Message msg) throws IOException {
+		//Disconnect message
+		if(!msg.connected){
+			serverUp = false;
+			System.out.println("Server down.");
+			exit();
+		}
+	}
 
-	
-	
 	@Override
 	public void send(Message msg) {
 		try {
