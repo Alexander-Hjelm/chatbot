@@ -65,9 +65,11 @@ public class XmlParser {
 		
 		//check to see if there's an <keyresponse\> tag. Assume connected, but if tag exist, change status. 
 		connectionNode = xmlDoc.getElementsByTagName("keyresponse").item(0);
+		String key = null;
 		boolean isKeyResponseType = false;
 		if(!(connectionNode == null)){
 			isKeyResponseType = true;
+			key = myData.key;
 		}
 		
 		//tried to find attributes, got fatal error.
@@ -90,7 +92,14 @@ public class XmlParser {
 			messageType = MessageType.KEYRESPONSE;
 		}
 		
-		Message outMsg = new Message(text, sender, color, messageType);
+		Message outMsg;
+		//Only add key to message if it was set before
+		if (key != null) {		
+			outMsg = new Message(text, sender, color, messageType);
+		} else {
+			outMsg = new Message(text, sender, color, messageType, key);
+		}
+		
 		return outMsg;
 	}
 
@@ -129,7 +138,8 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.KEYRESPONSE) {
-			//do stuff
+			int strLen = retStr.length();
+			retStr = retStr.substring(0, strLen - 10) + "<keyresponse/><key>" + message.key + "</key>" + retStr.substring(strLen - 10, strLen);
 		}
 				
 		return  retStr;
