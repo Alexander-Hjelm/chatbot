@@ -146,13 +146,22 @@ public class IntroUI extends JFrame{
 			port = 4444;
 //			e1.printStackTrace();
 		}
+
+		//Encryption stuff
 		
-		// might be too early to set key, unless ceasar-encrypt?
-		String key = "temp";
-		// ought to be set to true/false in listeners to the encryption-buttons.
-		boolean aes = true;
+		String key;
+		boolean aes;
+		Keygen keygen = new Keygen();
 		
-		
+		// Set encryption method based on user selection
+		if (aesRadioButton.isSelected()) {
+			aes = true;
+			key = keygen.generateAesKey();
+		}
+		else {
+			aes = false;
+			key = keygen.generateCaesarKey();
+		}
 		
 		MyData myData;
 		
