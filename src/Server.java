@@ -66,7 +66,7 @@ public Server(int portIn, MyData myData) throws IOException {
 	
 	private void handleMessageType(Message msg) throws IOException {
 		//Disconnect message
-		if(!msg.connected){
+		if(msg.isDisconnectType){
 			clientsConnected = false;
 			t = null;
 		}
@@ -100,7 +100,8 @@ public Server(int portIn, MyData myData) throws IOException {
 		
 		//if clients are connected:
 		if(clientsConnected){
-			Message exitMsg = new Message(" - the server has logged off. Closing program.", myData.userName, myData.color, false);
+			Message exitMsg = new Message(" - the server has logged off. Closing program.", myData.userName, myData.color);
+			exitMsg.setDisconnectType(true);
 			send(exitMsg);
 		}
 

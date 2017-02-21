@@ -33,7 +33,9 @@ public class XmlParser {
 		try { 
 			xmlDoc = buildXMLDocumentFromString(xml);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
-			return new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color, true);
+			Message outMsg = new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color);
+			//outMsg.setDisconnectType(false);
+			return outMsg;
 		}
 		
 		xmlDoc.getElementsByTagName("text").item(0).getTextContent();
@@ -63,8 +65,11 @@ public class XmlParser {
 		//de-ecsape necessary fields here
 		text = deEscapeXMLChars(text);
 		sender = deEscapeXMLChars(sender);
-				
-		return new Message(text, sender, color, connected);
+		
+		Message outMsg = new Message(text, sender, color);
+		outMsg.setDisconnectType(!connected);
+		
+		return outMsg;
 	}
 
 	public String MessageToXmlString (Message message) {
@@ -91,7 +96,7 @@ public class XmlParser {
 					;
 		
 		//add disconnected tag if message contains connected = false.
-		if(!message.connected){
+		if(message.isDisconnectType){
 			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}

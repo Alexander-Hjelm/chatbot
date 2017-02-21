@@ -69,7 +69,7 @@ public class Client extends CommunicationsHandler{
 	
 	private void handleMessageType(Message msg) throws IOException {
 		//Disconnect message
-		if(!msg.connected){
+		if(msg.isDisconnectType){
 			serverUp = false;
 			System.out.println("Server down.");
 			exit();
@@ -101,7 +101,8 @@ public class Client extends CommunicationsHandler{
 		
 		//if connected to server.
 		if(serverUp) {
-			Message exitMsg = new Message("has logged off.", myData.userName, myData.color, false);
+			Message exitMsg = new Message("has logged off.", myData.userName, myData.color);
+			exitMsg.setDisconnectType(true);
 			send(exitMsg);
 		}
 		
