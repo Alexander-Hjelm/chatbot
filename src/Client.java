@@ -12,7 +12,7 @@ import java.net.UnknownHostException;
 public class Client extends CommunicationsHandler{
 
 	private int destinationPort;
-	private Socket socket;
+	private Socket socket = null;
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
@@ -29,12 +29,17 @@ public class Client extends CommunicationsHandler{
 		//redundant method at the moment?
 		connect(adress, destinationPort);
 		
-		//at the moment we can only connect while server is up:
+		//if connect worked, a server is up.
 		serverUp = true;
 	}
 	
 	public void connect(String adress, int port) throws UnknownHostException, IOException {
-		socket = new Socket(adress, port);
+		try {
+			socket = new Socket(adress, port);
+		} catch (Exception e) {
+			System.out.println("Trouble connecting to server. Closing program");
+			exit();
+		}
 		startThread();
 	}
 
@@ -57,7 +62,8 @@ public class Client extends CommunicationsHandler{
 				
 				if(!msg.connected){
 					serverUp = false;
-					t = null;
+					System.out.println("Server down.");
+					exit();
 				}
 
 			

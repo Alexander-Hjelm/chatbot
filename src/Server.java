@@ -42,7 +42,7 @@ public Server(int portIn, MyData myData) throws IOException {
 	public void run() {
 
 		
-		while (t != null) {
+		while (t != null && clientsConnected) {
 			//Listen for messages from client
 			//Wait for an incoming connection	
 			

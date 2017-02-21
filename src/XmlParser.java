@@ -96,7 +96,6 @@ public class XmlParser {
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}
 		
-		System.out.println(retStr);
 		
 		return  retStr;
 	}
