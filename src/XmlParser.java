@@ -124,7 +124,8 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.KEYREQUEST) {
-			//do stuff
+			int strLen = retStr.length();
+			retStr = retStr.substring(0, strLen - 10) + "<keyrequest/>" + retStr.substring(strLen - 10, strLen);
 		}
 		
 		if(message.messageType == MessageType.KEYRESPONSE) {
