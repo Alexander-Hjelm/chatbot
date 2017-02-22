@@ -66,10 +66,18 @@ public class XmlParser {
 		//check to see if there's an <keyresponse\> tag. Assume connected, but if tag exist, change status. 
 		connectionNode = xmlDoc.getElementsByTagName("keyresponse").item(0);
 		String key = null;
+		boolean aes = false;	//Encryption method
 		boolean isKeyResponseType = false;
 		if(!(connectionNode == null)){
 			isKeyResponseType = true;
 			key = xmlDoc.getElementsByTagName("key").item(0).getTextContent();	//Extract key from message
+			
+			//set encryption method
+			key = xmlDoc.getElementsByTagName("key").item(0).getTextContent();
+			if(xmlDoc.getElementsByTagName("type").item(0).getTextContent().equals("aes")) {
+				aes = true;
+			}
+			
 		}
 		
 		//tried to find attributes, got fatal error.
@@ -94,10 +102,12 @@ public class XmlParser {
 		
 		Message outMsg;
 		//Only add key to message if it was set before
-		if (key != null) {		
+		if (!isKeyResponseType) {		
+			//This is a standard message
 			outMsg = new Message(text, sender, color, messageType);
 		} else {
-			outMsg = new Message(text, sender, color, messageType, key);
+			//This is a key response message
+			outMsg = new Message(text, sender, color, messageType, key, aes);
 		}
 		
 		return outMsg;
@@ -138,8 +148,20 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.KEYRESPONSE) {
+			//Build type string
+			String type = "";
+			if (myData.aes) {
+				type = "aes";
+			} else {
+				type = "caesar";
+			}
+			
 			int strLen = retStr.length();
-			retStr = retStr.substring(0, strLen - 10) + "<keyresponse/><key>" + message.key + "</key>" + retStr.substring(strLen - 10, strLen);
+			retStr = retStr.substring(0, strLen - 10) + "<keyresponse> +"
+					+ "<key>" + message.key + "</key>"
+					+ "<type>" + type + "</type>"
+					+ "</keyresponse"
+					+ retStr.substring(strLen - 10, strLen);
 		}
 				
 		return  retStr;
