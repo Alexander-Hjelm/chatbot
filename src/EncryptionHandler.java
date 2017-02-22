@@ -21,7 +21,7 @@ public class EncryptionHandler {
 	public EncryptionHandler(MyData myDataIn){
 		
 		this.myData = myDataIn;	
-		
+		this.thisKey = myData.key;
 		
 	}
 
@@ -80,8 +80,8 @@ public class EncryptionHandler {
 	}
 	
 	
-	public String aesEncrypt(String inputString, String stringKey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
-		SecretKey secKey = aesStringToKey(stringKey);
+	public String aesEncrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		SecretKey secKey = aesStringToKey(thisKey);
         
         byte[] b = inputString.getBytes(StandardCharsets.UTF_8);
         
@@ -91,15 +91,15 @@ public class EncryptionHandler {
         byte[] bytesEncrypted = aesCipher.doFinal(b);
         
         //make to hex-string
-        String aesHexString = DatatypeConverter.printHexBinary(bytesEncrypted);
-		return aesHexString;
+        String encryptedHexString = DatatypeConverter.printHexBinary(bytesEncrypted);
+		return encryptedHexString;
 	} 
 	
 	
 	
 	
-	public String aesDecrypt(String encryptedHexString, String stringKey) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
-		SecretKey secKey = aesStringToKey(stringKey);
+	public String aesDecrypt(String encryptedHexString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		SecretKey secKey = aesStringToKey(thisKey);
 		
 		//hex to bytes
 		byte[] b = DatatypeConverter.parseHexBinary(encryptedHexString);

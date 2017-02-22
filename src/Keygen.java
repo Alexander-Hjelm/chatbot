@@ -11,7 +11,6 @@ public class Keygen {
 		return Integer.toString(key);
 	}
 
-	//dummy
 	public String generateAesKey() throws NoSuchAlgorithmException{
 		SecretKey secKey = KeyGenerator.getInstance("AES").generateKey();
 		String stringKey = Base64.getEncoder().encodeToString(secKey.getEncoded());
