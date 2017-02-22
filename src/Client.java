@@ -82,6 +82,12 @@ public class Client extends CommunicationsHandler{
 			//Send key response.
 			send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
 		}
+		
+		//Key response message
+		else if (msg.messageType == MessageType.KEYRESPONSE) {
+			//Store sender as User
+			serverUser = new User(msg.sender, socket.getInetAddress().getHostAddress(), msg.key, msg.aes );
+		}
 	}
 
 	@Override

@@ -81,6 +81,11 @@ public Server(int portIn, MyData myData) throws IOException {
 			//Send key response.
 			send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
 		}
+		
+		//Key response message
+		else if (msg.messageType == MessageType.KEYRESPONSE) {
+			//Store sender in Users
+		}
 	}
 	
 	@Override
