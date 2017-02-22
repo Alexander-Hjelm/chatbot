@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 public class Server extends CommunicationsHandler {
 
@@ -19,6 +20,7 @@ public class Server extends CommunicationsHandler {
 	private Thread t;
 	private MyData myData;
 	private boolean clientsConnected;
+	private ArrayList<User> clientUsers = new ArrayList<User>();
 
 public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;

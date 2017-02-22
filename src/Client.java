@@ -19,8 +19,7 @@ public class Client extends CommunicationsHandler{
 	private Thread t;
 	private MyData myData;
 	private boolean serverUp;
-
-	
+	private User serverUser;
 
 	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
 		this.myData = myData;
