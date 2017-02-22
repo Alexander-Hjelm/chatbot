@@ -85,6 +85,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		//Key response message
 		else if (msg.messageType == MessageType.KEYRESPONSE) {
 			//Store sender in Users
+			clientUsers.add(new User(msg.sender, socket.getRemoteSocketAddress().toString(), msg.key, msg.aes ));
 		}
 	}
 	
