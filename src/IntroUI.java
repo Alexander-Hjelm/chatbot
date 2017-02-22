@@ -4,6 +4,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
 
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
@@ -151,14 +152,19 @@ public class IntroUI extends JFrame{
 
 		//Encryption stuff
 		
-		String key;
+		String key = null;
 		boolean aes;
 		Keygen keygen = new Keygen();
 		
 		// Set encryption method based on user selection
 		if (aesRadioButton.isSelected()) {
 			aes = true;
-			key = keygen.generateAesKey();
+			try {
+				key = keygen.generateAesKey();
+			} catch (NoSuchAlgorithmException e) {
+				System.out.println("Trouble generating AES-key");
+				e.printStackTrace();
+			}
 		}
 		else {
 			aes = false;
