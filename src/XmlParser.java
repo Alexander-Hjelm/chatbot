@@ -160,7 +160,7 @@ public class XmlParser {
 			retStr = retStr.substring(0, strLen - 10) + "<keyresponse> +"
 					+ "<key>" + message.key + "</key>"
 					+ "<type>" + type + "</type>"
-					+ "</keyresponse"
+					+ "</keyresponse>"
 					+ retStr.substring(strLen - 10, strLen);
 		}
 				
