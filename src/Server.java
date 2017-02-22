@@ -32,6 +32,9 @@ public Server(int portIn, MyData myData) throws IOException {
 		socket = server.accept();
 		clientsConnected = true;
 		startThread();
+		
+		//First thing: send key request message
+		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
 	}
 	
 	public void stopServer() throws IOException {

@@ -31,6 +31,9 @@ public class Client extends CommunicationsHandler{
 		
 		//if connect worked, a server is up.
 		serverUp = true;
+		
+		//First thing: send key request message
+		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
 	}
 	
 	public void connect(String adress, int port) throws UnknownHostException, IOException {
