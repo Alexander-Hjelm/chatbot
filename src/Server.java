@@ -73,6 +73,12 @@ public Server(int portIn, MyData myData) throws IOException {
 			clientsConnected = false;
 			t = null;
 		}
+		
+		//Key request message
+		else if (msg.messageType == MessageType.KEYREQUEST) {
+			//Send key response.
+			send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
+		}
 	}
 	
 	@Override
