@@ -4,6 +4,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -30,7 +31,10 @@ public class Client extends CommunicationsHandler{
 		
 		//if connect worked, a server is up.
 		serverUp = true;
-		
+	}
+	
+	@Override
+	public void sendKeyRequest() {
 		//First thing: send key request message
 		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
 	}
@@ -57,6 +61,7 @@ public class Client extends CommunicationsHandler{
 				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
+				
 				UI.updateMessageArea(msg);
 				handleMessageType(msg);
 				
@@ -136,4 +141,11 @@ public class Client extends CommunicationsHandler{
 		
 		
 	}
+
+	@Override
+	public void sendFile(File file) {
+		//Send file here
+		
+	}
+	
 }

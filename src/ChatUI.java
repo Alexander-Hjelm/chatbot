@@ -6,6 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
@@ -42,9 +43,8 @@ public class ChatUI extends JFrame{
 	private JButton exitButton;
 	private JButton sendFileButton;
 	private JButton newChatButton;
-	private JFileChooser fileChooser;
+	private JFileChooser fileChooser = new JFileChooser();
 	private FileReceiverUI fileReceiverUI;
-	private SendFileUI sendFileUI;
 
 	private MyData myData;
 	
@@ -55,13 +55,17 @@ public class ChatUI extends JFrame{
 		this.communicationsHandler = communicationsHandlerIn;
 		this.myData = myDataIn;
 
-	
-		// tell communicationsHandler, client or server that this ChatUI is their UI:
-		communicationsHandler.setUI(this);
-				
 		panel = new JPanel();
 		buttonAction();
 		createAndShowGUI(panel);
+		
+		// tell communicationsHandler, client or server that this ChatUI is their UI:
+		communicationsHandler.setUI(this);
+		
+		//Send Key request AFTER UI has been set, otherwise we get a NullPointerException on ChatUI
+		communicationsHandlerIn.sendKeyRequest();
+				
+
 	}
 	
 	
@@ -96,7 +100,13 @@ public class ChatUI extends JFrame{
 		
 		sendFileButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 // open sendFileUI, open fileChooser etc. 
+	        	 //Show a file chooser GUI
+	             int returnVal = fileChooser.showOpenDialog(panel);
+
+	             if (returnVal == JFileChooser.APPROVE_OPTION) {
+	                 File file = fileChooser.getSelectedFile();
+	                 communicationsHandler.sendFile(file);
+	             }
 	         }
 	      });
 		
@@ -164,6 +174,11 @@ public class ChatUI extends JFrame{
         c.weightx = 1;
         panel.add(sendButton,c);
         
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 3;
+        c.gridx = 1;
+        c.weightx = 1;
+        panel.add(sendFileButton,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;

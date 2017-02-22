@@ -3,6 +3,7 @@ import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.EOFException;
+import java.io.File;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -34,7 +35,10 @@ public Server(int portIn, MyData myData) throws IOException {
 		socket = server.accept();
 		clientsConnected = true;
 		startThread();
-		
+	}
+	
+	@Override
+	public void sendKeyRequest() {
 		//First thing: send key request message
 		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
 	}
@@ -54,7 +58,6 @@ public Server(int portIn, MyData myData) throws IOException {
 			try {
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				String xml = streamIn.readUTF();
-				
 				XmlParser xmlParser = new XmlParser(myData);
 				Message msg = xmlParser.xmlStringToMessage(xml);
 				UI.updateMessageArea(msg);
@@ -131,4 +134,11 @@ public Server(int portIn, MyData myData) throws IOException {
 		t.start();
 		
 	}
+	
+	@Override
+	public void sendFile(File file) {
+		//Send file here
+		
+	}
+	
 }
