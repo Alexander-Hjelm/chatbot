@@ -2,10 +2,15 @@
 public class User {
 	
 	
-	private String name;
+	public String name;
+	public String adress;
+	public String key;
+	public boolean aes;
 	
-	
-	public User(String nameIn) {
-		name = nameIn;
+	public User(String name, String adress, String key, boolean aes) {
+		this.name = name;
+		this.adress = adress;
+		this.key = key;
+		this.aes = aes;
 	}
 }
