@@ -38,10 +38,28 @@ public class XmlParser {
 			return outMsg;
 		}
 		
-		xmlDoc.getElementsByTagName("text").item(0).getTextContent();
+		//decrypt stuff before getting the other contents. at the moment there's only one child to encrypted, text.
+		//hard coded for now to caesar decrypt. update needed to respect aes boolean etc later on. 
+		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
+		NodeList encryptedChilds = encrypted.getChildNodes();
+		for (int i = 0; i < encryptedChilds.getLength(); i++) {
+			
+			
+			String stringToBeDecrypted = encryptedChilds.item(i).getTextContent();
+			
+			String plainText = encryptionHandler.caesarDecrypt(stringToBeDecrypted);
+			encryptedChilds.item(i).setTextContent(plainText);
+			
+		}
+		
 		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
-		String sender = xmlDoc.getElementsByTagName("sender").item(0).getTextContent();
-		String colorStr = xmlDoc.getElementsByTagName("color").item(0).getTextContent();
+		
+		Element msg = (Element) xmlDoc.getElementsByTagName("message").item(0);
+		String sender = msg.getAttribute("sender");
+		System.out.println();
+		
+		Element textElem = (Element) xmlDoc.getElementsByTagName("text").item(0);
+		String colorStr = textElem.getAttribute("color");
 		
 		
 //		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0).getChildNodes();
@@ -156,27 +174,22 @@ public class XmlParser {
 		
 		
 		String retStr = 
-				"<message>"
-					+ "<text>"
-						+ message.text
+				"<message sender=" + "\"" + message.sender + "\">"
+					+ "<encrypted type=" + "\"" + "caesar" + "\">"
+					+ "<text color=" + "\"" + message.color.toString() + "\">"
+						+ encryptionHandler.encryptCaesar(message.text)
 					+ "</text>"
-					+ "<sender>"
-						+ message.sender
-					+ "</sender>"
-					+ "<color>"
-						+ message.color.toString()
-					+ "</color>"
+					+ "</encrypted>"
 				+ "</message>"
 					;
 		
+		int strLen = retStr.length();
 		//add disconnected tag if message contains connected = false.
 		if(message.messageType == MessageType.DISCONNECT){
-			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
 		}
 		
 		if(message.messageType == MessageType.KEYREQUEST) {
-			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<keyrequest/>" + retStr.substring(strLen - 10, strLen);
 		}
 		
@@ -189,7 +202,6 @@ public class XmlParser {
 				type = "caesar";
 			}
 			
-			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<keyresponse> +"
 					+ "<key>" + message.key + "</key>"
 					+ "<type>" + type + "</type>"
@@ -198,7 +210,6 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.FILEREQUEST) {
-			int strLen = retStr.length();
 			retStr = retStr.substring(0, strLen - 10) + "<filerequest> +"
 					+ "<filename>" + message.fileName + "</filename>"
 					+ "<size>" + message.fileSize + "</size>"
@@ -207,7 +218,6 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.FILERESPONSE) {
-			int strLen = retStr.length();
 			//Set response boolean
 			String reply = "no";
 			if (message.fileReply) {
