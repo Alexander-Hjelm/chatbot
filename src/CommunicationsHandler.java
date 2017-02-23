@@ -9,7 +9,8 @@ public abstract class CommunicationsHandler implements Runnable{
 	public abstract void run();
 	public abstract void send(Message msg);
 	public abstract void sendKeyRequest();
-	public abstract void sendFileRequest(File file, String text);
+	public abstract void sendFileRequest(File file, String additionalText);
+	public abstract void sendFileResponse(boolean reply, String additionalText);
 	public abstract void setUI(ChatUI UI);
 	public abstract void exit() throws IOException;
 	protected abstract void startThread();

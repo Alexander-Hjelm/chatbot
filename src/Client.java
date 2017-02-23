@@ -160,4 +160,10 @@ public class Client extends CommunicationsHandler{
 		}
 	}
 	
+	@Override
+	public void sendFileResponse(boolean reply, String additionalText) {
+		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply);
+		send(fileResponseMessage);
+	}
+	
 }
