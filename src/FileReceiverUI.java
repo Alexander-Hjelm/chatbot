@@ -31,7 +31,7 @@ public class FileReceiverUI extends JFrame {
 		panel = new JPanel();
 		
 		yesButton = new JButton("Yes");
-		yesButton = new JButton("No");
+		noButton = new JButton("No");
 		portTextField = new JTextField("port");
 		optionalMessageTextField = new JTextField("Optional message");
 		
