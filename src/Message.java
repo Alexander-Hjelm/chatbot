@@ -7,7 +7,7 @@ public class Message {
 	public String key;
 	public boolean aes;
 	public String fileName;
-	public int fileSize;
+	public long fileSize;
 	
 	public MessageType messageType;
 	
@@ -36,7 +36,7 @@ public class Message {
 		this.aes = aes;
 	}
 	
-	public Message(String text, String sender, Color color, MessageType messageType, String fileName, int fileSize) {
+	public Message(String text, String sender, Color color, MessageType messageType, String fileName, long fileSize) {
 		//File request
 		this.text = text;
 		this.sender = sender;
