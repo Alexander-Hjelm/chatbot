@@ -21,9 +21,12 @@ public class EncryptionHandler {
 	public EncryptionHandler(MyData myDataIn){
 		
 		this.myData = myDataIn;	
-		this.thisKey = myData.key;
+		this.thisKey = "3481";
 		
 	}
+	
+	//for later: add methods encrypt/decrypt, which calls caesar or aes depending on aes-boolean. could be solved in other ways too.
+	//
 
 	//ciphers
 	//caesar/shift-cipher:
@@ -37,7 +40,6 @@ public class EncryptionHandler {
 			
 
 			int current = b[i] & 0xff;
-			System.out.println("currentint " + current);
 			int shifted = ((current + key) % byteRange);
 			b[i] = (byte) shifted;
 		}

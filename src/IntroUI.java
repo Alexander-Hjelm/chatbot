@@ -70,7 +70,7 @@ public class IntroUI extends JFrame{
 		cryptoButtonGroup = new ButtonGroup();
 		cryptoButtonGroup.add(aesRadioButton);
 		cryptoButtonGroup.add(caesarRadioButton);
-		aesRadioButton.setSelected(true);
+		caesarRadioButton.setSelected(true);
 		
 		GridLayout cryptoButtonLayout = new GridLayout(0, 2);
 		JPanel cryptoButtonPanel = new JPanel(cryptoButtonLayout);

@@ -63,7 +63,7 @@ public class ChatUI extends JFrame{
 		communicationsHandler.setUI(this);
 		
 		//Send Key request AFTER UI has been set, otherwise we get a NullPointerException on ChatUI
-		communicationsHandlerIn.sendKeyRequest();
+		communicationsHandler.sendKeyRequest();
 				
 
 	}
