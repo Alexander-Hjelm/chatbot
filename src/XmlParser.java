@@ -94,8 +94,13 @@ public class XmlParser {
 		//check to see if there's an <fileresponse\> tag. Assume connected, but if tag exist, change status. 
 		connectionNode = xmlDoc.getElementsByTagName("fileresponse").item(0);
 		boolean isFileResponseType = false;
+		boolean reply = false;
 		if(!(connectionNode == null)){
 			isFileResponseType = true;
+			if (xmlDoc.getElementsByTagName("filename").item(0).getTextContent().equals("yes")) {
+				//Message contained the reply yes
+				reply = true;
+			}
 		}
 		
 		//tried to find attributes, got fatal error.
@@ -130,6 +135,9 @@ public class XmlParser {
 		} else if(isFileRequestType) {
 			//This is a file request message
 			outMsg = new Message(text, sender, color, messageType, fileName, size);
+		} else if(isFileResponseType) {
+			//This is a file response message
+			outMsg = new Message(text, sender, color, messageType, reply);
 		} else {		
 			//This is a standard message
 			outMsg = new Message(text, sender, color, messageType);
@@ -199,7 +207,17 @@ public class XmlParser {
 		}
 		
 		if(message.messageType == MessageType.FILERESPONSE) {
+			int strLen = retStr.length();
+			//Set response boolean
+			String reply = "no";
+			if (message.fileReply) {
+				reply = "yes";
+			}
 			
+			retStr = retStr.substring(0, strLen - 10) + "<fileresponse> +"
+					+ "<reply>" + reply + "</reply>"
+					+ "</fileresponse>"
+					+ retStr.substring(strLen - 10, strLen);
 		}
 				
 		return  retStr;
