@@ -1,12 +1,16 @@
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.File;
 import java.io.IOException;
 
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -30,8 +34,8 @@ public class FileReceiverUI extends JFrame {
 		this.communicationsHandler = communicationsHandler;
 		panel = new JPanel();
 		
-		yesButton = new JButton("Yes");
-		noButton = new JButton("No");
+		buttonAction();
+		
 		portTextField = new JTextField("port");
 		optionalMessageTextField = new JTextField("Optional message");
 		
@@ -75,6 +79,26 @@ public class FileReceiverUI extends JFrame {
 		this.setVisible(true);
 		
 		
+	}
+	
+	private void buttonAction() {
+		yesButton = new JButton("Yes");
+		noButton = new JButton("No");
+		
+		yesButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	           	 communicationsHandler.sendFileResponse(true, optionalMessageTextField.getText());
+	           	 dispose();
+	         }
+	      });
+		
+		noButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	 communicationsHandler.sendFileResponse(false, optionalMessageTextField.getText());
+	        	 dispose();
+	         }
+	      });
+
 	}
 
 }
