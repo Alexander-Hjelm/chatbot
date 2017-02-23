@@ -105,7 +105,7 @@ public class ChatUI extends JFrame{
 
 	             if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            	 File file = fileChooser.getSelectedFile();
-	                 communicationsHandler.sendFile(file, myMessagePane.getText());
+	                 communicationsHandler.sendFileRequest(file, myMessagePane.getText());
 	                 
 
 	                 
