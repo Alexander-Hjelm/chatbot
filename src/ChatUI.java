@@ -236,6 +236,10 @@ public class ChatUI extends JFrame{
 		
 	}
 	
+	public void showFileReceiverUI() {
+		fileReceiverUI = new FileReceiverUI(communicationsHandler);
+	}
+	
 	private void sendMessage() {
 		// might want to build XML-message here, or it could be constructed in client/server with the string sent.
 		String text = myMessagePane.getText();
