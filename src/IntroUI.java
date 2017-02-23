@@ -93,6 +93,12 @@ public class IntroUI extends JFrame{
 	         }
 	      });
 		
+		exitButton.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	        	 System.exit(0);
+	         }
+	      });
+		
 		panel.add(titlePanel);
 		panel.add(emptyPanel);
 		

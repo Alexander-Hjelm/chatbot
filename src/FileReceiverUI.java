@@ -29,9 +29,9 @@ public class FileReceiverUI extends JFrame {
 	private JTextField portTextField;
 	private JTextField optionalMessageTextField;
 	
-	public FileReceiverUI(CommunicationsHandler communicationsHandler) {
+	public FileReceiverUI(CommunicationsHandler communicationsHandlerIn) {
 		super("Accept incoming file?");
-		this.communicationsHandler = communicationsHandler;
+		this.communicationsHandler = communicationsHandlerIn;
 		panel = new JPanel();
 		
 		buttonAction();
@@ -70,6 +70,18 @@ public class FileReceiverUI extends JFrame {
 		
 	    //Create and set up the window.
         this.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        
+        //make frame's cross button default to a no-answer.
+        this.addWindowListener( new WindowAdapter()
+        {
+            public void windowClosing(WindowEvent e)
+            {
+            	
+            	communicationsHandler.sendFileResponse(false, optionalMessageTextField.getText());
+   	        	 dispose();
+
+            }
+        });
 	  
 	    //Add contents to the window.
 		this.add(panel);
