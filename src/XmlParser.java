@@ -97,7 +97,7 @@ public class XmlParser {
 		boolean reply = false;
 		if(!(connectionNode == null)){
 			isFileResponseType = true;
-			if (xmlDoc.getElementsByTagName("filename").item(0).getTextContent().equals("yes")) {
+			if (xmlDoc.getElementsByTagName("reply").item(0).getTextContent().equals("yes")) {
 				//Message contained the reply yes
 				reply = true;
 			}
