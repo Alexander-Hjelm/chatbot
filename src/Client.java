@@ -143,9 +143,11 @@ public class Client extends CommunicationsHandler{
 	}
 
 	@Override
-	public void sendFile(File file) {
-		//Send file here
-		
+	public void sendFile(File file, String text) {
+		if (file.exists()) {
+			Message fileRequestMessage = new Message(text, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
+			send(fileRequestMessage);
+		}
 	}
 	
 }

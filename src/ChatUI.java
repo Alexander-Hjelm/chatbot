@@ -104,8 +104,16 @@ public class ChatUI extends JFrame{
 	             int returnVal = fileChooser.showOpenDialog(panel);
 
 	             if (returnVal == JFileChooser.APPROVE_OPTION) {
-	                 File file = fileChooser.getSelectedFile();
-	                 communicationsHandler.sendFile(file);
+	            	 File file = fileChooser.getSelectedFile();
+	                 communicationsHandler.sendFile(file, myMessagePane.getText());
+	                 
+
+	                 
+//	         		 Check for xml errors,  \o/
+	                 XmlParser xmlParser = new XmlParser(myData);
+	                 xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(new Message(myData.userName, myMessagePane.getText(), myData.color)));
+	         		
+	         		myMessagePane.setText("");
 	             }
 	         }
 	      });
