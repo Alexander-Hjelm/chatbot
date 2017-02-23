@@ -1,15 +1,10 @@
 
-//Ottoman was here
-
 public class FileReceiverUI {
 	
-	private Server server;
+	private CommunicationsHandler communicationsHandler;
 	
-	public FileReceiverUI(Server serverIn) {
-		server = serverIn;
+	public FileReceiverUI(CommunicationsHandler communicationsHandler) {
+		this.communicationsHandler = communicationsHandler;
 	}
 	
-	//Vad du vill bara förstör
 }
-
-//#pimpmyreich
