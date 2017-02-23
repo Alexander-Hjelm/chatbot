@@ -80,6 +80,24 @@ public class XmlParser {
 			
 		}
 		
+		//check to see if there's an <filerequest\> tag. Assume connected, but if tag exist, change status. 
+		connectionNode = xmlDoc.getElementsByTagName("filerequest").item(0);
+		long size = 0;
+		String fileName = null;
+		boolean isFileRequestType = false;
+		if(!(connectionNode == null)){
+			isFileRequestType = true;
+			fileName = xmlDoc.getElementsByTagName("filename").item(0).getTextContent();	//Extract file name from message
+			size = Long.parseLong(xmlDoc.getElementsByTagName("size").item(0).getTextContent());	//Extract file size from message
+		}
+		
+		//check to see if there's an <fileresponse\> tag. Assume connected, but if tag exist, change status. 
+		connectionNode = xmlDoc.getElementsByTagName("fileresponse").item(0);
+		boolean isFileResponseType = false;
+		if(!(connectionNode == null)){
+			isFileResponseType = true;
+		}
+		
 		//tried to find attributes, got fatal error.
 //		NodeList nl = (NodeList) xmlDoc.getElementsByTagName("disconnect");
 //		String connectionStatus = nl.item(0).getAttributes().getNamedItem("status").getNodeValue();
@@ -98,17 +116,24 @@ public class XmlParser {
 			messageType = MessageType.KEYREQUEST;
 		} else if (isKeyResponseType){
 			messageType = MessageType.KEYRESPONSE;
+		} else if (isFileRequestType){
+			messageType = MessageType.FILEREQUEST;
+		} else if (isFileResponseType){
+			messageType = MessageType.FILERESPONSE;
 		}
 		
 		Message outMsg;
 		//Only add key to message if it was set before
-		if (!isKeyResponseType) {		
-			//This is a standard message
-			outMsg = new Message(text, sender, color, messageType);
-		} else {
+		if(isKeyResponseType) {
 			//This is a key response message
 			outMsg = new Message(text, sender, color, messageType, key, aes);
-		}
+		} else if(isFileRequestType) {
+			//This is a file request message
+			outMsg = new Message(text, sender, color, messageType, fileName, size);
+		} else {		
+			//This is a standard message
+			outMsg = new Message(text, sender, color, messageType);
+		} 
 		
 		return outMsg;
 	}
@@ -162,6 +187,19 @@ public class XmlParser {
 					+ "<type>" + type + "</type>"
 					+ "</keyresponse>"
 					+ retStr.substring(strLen - 10, strLen);
+		}
+		
+		if(message.messageType == MessageType.FILEREQUEST) {
+			int strLen = retStr.length();
+			retStr = retStr.substring(0, strLen - 10) + "<filerequest> +"
+					+ "<filename>" + message.fileName + "</filename>"
+					+ "<size>" + message.fileSize + "</size>"
+					+ "</filerequest>"
+					+ retStr.substring(strLen - 10, strLen);
+		}
+		
+		if(message.messageType == MessageType.FILERESPONSE) {
+			
 		}
 				
 		return  retStr;
