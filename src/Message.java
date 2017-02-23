@@ -8,6 +8,7 @@ public class Message {
 	public boolean aes;
 	public String fileName;
 	public long fileSize;
+	public boolean fileReply;	//true = yes, false = no
 	
 	public MessageType messageType;
 	
@@ -44,6 +45,15 @@ public class Message {
 		this.messageType = messageType;
 		this.fileName = fileName;
 		this.fileSize = fileSize;
+	}
+
+	public Message(String text, String sender, Color color, MessageType messageType, boolean fileReply) {
+		//File response
+		this.text = text;
+		this.sender = sender;
+		this.color = color;
+		this.messageType = messageType;
+		this.fileReply = fileReply;
 	}
 	
 }
