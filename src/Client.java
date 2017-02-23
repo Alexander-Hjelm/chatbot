@@ -101,7 +101,11 @@ public class Client extends CommunicationsHandler{
 		
 		//File response message
 		else if (msg.messageType == MessageType.FILERESPONSE) {
-
+			if(msg.fileReply) {
+				UI.updateMessageArea(new Message("Reciever has accepted your file", "System", Color.BLACK));
+			} else {
+				UI.updateMessageArea(new Message("Reciever did not accepted your file", "System", Color.BLACK));
+			}
 		}
 	}
 

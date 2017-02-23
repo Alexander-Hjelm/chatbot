@@ -1,3 +1,4 @@
+import java.awt.Color;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -98,7 +99,11 @@ public Server(int portIn, MyData myData) throws IOException {
 		
 		//File response message
 		else if (msg.messageType == MessageType.FILERESPONSE) {
-
+			if(msg.fileReply) {
+				UI.updateMessageArea(new Message("Reciever has accepted your file", "System", Color.BLACK));
+			} else {
+				UI.updateMessageArea(new Message("Reciever did not accepted your file", "System", Color.BLACK));
+			}
 		}
 	}
 	
