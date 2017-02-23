@@ -93,6 +93,16 @@ public class Client extends CommunicationsHandler{
 			//Store sender as User
 			serverUser = new User(msg.sender, socket.getInetAddress().getHostAddress(), msg.key, msg.aes );
 		}
+		
+		//File request message
+		else if (msg.messageType == MessageType.FILEREQUEST) {
+			UI.showFileReceiverUI();
+		}
+		
+		//File response message
+		else if (msg.messageType == MessageType.FILERESPONSE) {
+
+		}
 	}
 
 	@Override

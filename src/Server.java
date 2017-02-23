@@ -90,6 +90,16 @@ public Server(int portIn, MyData myData) throws IOException {
 			//Store sender in Users
 			clientUsers.add(new User(msg.sender, socket.getRemoteSocketAddress().toString(), msg.key, msg.aes ));
 		}
+		
+		//File request message
+		else if (msg.messageType == MessageType.FILEREQUEST) {
+			UI.showFileReceiverUI();
+		}
+		
+		//File response message
+		else if (msg.messageType == MessageType.FILERESPONSE) {
+
+		}
 	}
 	
 	@Override
