@@ -23,6 +23,7 @@ public class Server extends CommunicationsHandler {
 	private MyData myData;
 	private boolean clientsConnected;
 	private ArrayList<User> clientUsers = new ArrayList<User>();
+	private User singleClientUser = null;
 
 public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;
@@ -89,7 +90,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		//Key response message
 		else if (msg.messageType == MessageType.KEYRESPONSE) {
 			//Store sender in Users
-			clientUsers.add(new User(msg.sender, socket.getRemoteSocketAddress().toString(), msg.key, msg.aes ));
+			singleClientUser  = new User(msg.sender, socket.getRemoteSocketAddress().toString(), msg.key, msg.aes );
 		}
 		
 		//File request message
@@ -111,10 +112,11 @@ public Server(int portIn, MyData myData) throws IOException {
 	public void send(Message msg) {
 
 		try {
-			
 			XmlParser xmlParser = new XmlParser(myData);
+			if(singleClientUser != null){
+				xmlParser.setUser(singleClientUser);
+			}
 			String xml = xmlParser.MessageToXmlString(msg);
-			
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			streamOut.writeUTF(xml);
 			streamOut.flush();

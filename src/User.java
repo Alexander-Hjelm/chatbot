@@ -4,6 +4,7 @@ public class User {
 	
 	public String name;
 	public String adress;
+//	public Socket socket; for later.
 	public String key;
 	public boolean aes;
 	

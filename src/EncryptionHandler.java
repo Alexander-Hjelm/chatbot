@@ -14,23 +14,39 @@ import javax.xml.bind.DatatypeConverter;
 
 public class EncryptionHandler {
 	
-	private String thisKey = null;
+	private String thisKey;
 	private int byteRange = 256;
-	private MyData myData;
+	private boolean aes;
+	private String receiverKey;
 	
-	public EncryptionHandler(MyData myDataIn){
+	public EncryptionHandler(String keyIn, boolean aesIn){
 		
-		this.myData = myDataIn;	
-		this.thisKey = "3481";
+		this.thisKey = keyIn;	
+		this.aes = aesIn;
 		
 	}
 	
-	//for later: add methods encrypt/decrypt, which calls caesar or aes depending on aes-boolean. could be solved in other ways too.
-	//
+	public String encrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		if(aes){
+			return aesEncrypt(inputString);
+		}
+		else{
+			return caesarEncrypt(inputString);
+		}
+	}
+	
+	public String decrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		if(aes){
+			return aesDecrypt(inputString);
+		}
+		else{
+			return caesarDecrypt(inputString);
+		}
+	}
 
 	//ciphers
 	//caesar/shift-cipher:
-	public String encryptCaesar(String inputString) {
+	private String caesarEncrypt(String inputString) {
 	
 		int key = Integer.parseInt(thisKey);
 		
@@ -49,7 +65,7 @@ public class EncryptionHandler {
 		return(encryptedHexString);
 	}
 	
-	public String caesarDecrypt(String encryptedHexString) {
+	private String caesarDecrypt(String encryptedHexString) {
 		
 		int key = Integer.parseInt(thisKey);
 		
@@ -82,7 +98,7 @@ public class EncryptionHandler {
 	}
 	
 	
-	public String aesEncrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	private String aesEncrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		SecretKey secKey = aesStringToKey(thisKey);
         
         byte[] b = inputString.getBytes(StandardCharsets.UTF_8);
@@ -100,7 +116,7 @@ public class EncryptionHandler {
 	
 	
 	
-	public String aesDecrypt(String encryptedHexString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	private String aesDecrypt(String encryptedHexString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		SecretKey secKey = aesStringToKey(thisKey);
 		
 		//hex to bytes

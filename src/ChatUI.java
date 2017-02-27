@@ -248,9 +248,9 @@ public class ChatUI extends JFrame{
 		communicationsHandler.send(msg);
 //							  _   _
 //		Check for xml errors,  \o/
-		XmlParser xmlParser = new XmlParser(myData); 
-		String outText = xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(msg)).text;
-		msg.text = outText;
+//		XmlParser xmlParser = new XmlParser(myData); 
+//		String outText = xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(msg)).text;
+//		msg.text = outText;
 		
 		myMessagePane.setText("");
 		updateMessageArea(msg);

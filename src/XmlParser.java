@@ -1,10 +1,23 @@
 import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.StringWriter;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
 
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.transform.OutputKeys;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
+import javax.xml.transform.TransformerFactory;
+import javax.xml.transform.TransformerFactoryConfigurationError;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.stream.StreamResult;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -16,18 +29,17 @@ public class XmlParser {
 
 	private MyData myData;
 	private EncryptionHandler encryptionHandler;
+	private User user = null;
 	
 	public XmlParser(MyData myDataIn) {
 		this.myData = myDataIn;
-		encryptionHandler = new EncryptionHandler(myData);
+		
 	}
 	
+	
+	//method related to run in client/server.
 	public Message xmlStringToMessage (String xml) {
-		
-		//decrypt
-		
-		
-		
+
 		//build a Message from an xml string
 		Document xmlDoc = null;
 		try { 
@@ -38,32 +50,6 @@ public class XmlParser {
 			return outMsg;
 		}
 		
-		//decrypt stuff before getting the other contents. at the moment there's only one child to encrypted, text.
-		//hard coded for now to caesar decrypt. update needed to respect aes boolean etc later on. 
-		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
-		NodeList encryptedChilds = encrypted.getChildNodes();
-		for (int i = 0; i < encryptedChilds.getLength(); i++) {
-			
-			
-			String stringToBeDecrypted = encryptedChilds.item(i).getTextContent();
-			
-			String plainText = encryptionHandler.caesarDecrypt(stringToBeDecrypted);
-			encryptedChilds.item(i).setTextContent(plainText);
-			
-		}
-		
-		String text = xmlDoc.getElementsByTagName("text").item(0).getTextContent();
-		
-		Element msg = (Element) xmlDoc.getElementsByTagName("message").item(0);
-		String sender = msg.getAttribute("sender");
-		System.out.println();
-		
-		Element textElem = (Element) xmlDoc.getElementsByTagName("text").item(0);
-		String colorStr = textElem.getAttribute("color");
-		
-		
-//		Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0).getChildNodes();
-//		encrypted.getElementsByTagName(name)
 		
 		Node connectionNode;
 		
@@ -88,11 +74,11 @@ public class XmlParser {
 		boolean isKeyResponseType = false;
 		if(!(connectionNode == null)){
 			isKeyResponseType = true;
-			key = xmlDoc.getElementsByTagName("key").item(0).getTextContent();	//Extract key from message
+			Element keyElem = (Element) xmlDoc.getElementsByTagName("keyresponse").item(0);
+			key = keyElem.getAttribute("key");//Extract key from the attribute of keyresponse
 			
 			//set encryption method
-			key = xmlDoc.getElementsByTagName("key").item(0).getTextContent();
-			if(xmlDoc.getElementsByTagName("type").item(0).getTextContent().equals("aes")) {
+			if(keyElem.getAttribute("type").equals("aes")) {
 				aes = true;
 			}
 			
@@ -121,16 +107,9 @@ public class XmlParser {
 			}
 		}
 		
-		//tried to find attributes, got fatal error.
-//		NodeList nl = (NodeList) xmlDoc.getElementsByTagName("disconnect");
-//		String connectionStatus = nl.item(0).getAttributes().getNamedItem("status").getNodeValue();
 		
 		
-		Color color = buildColorFromString(colorStr);
-		
-		//de-ecsape necessary fields here
-		text = deEscapeXMLChars(text);
-		sender = deEscapeXMLChars(sender);
+
 		
 		MessageType messageType = MessageType.STANDARD;
 		if (isDisconnectType) {
@@ -145,6 +124,51 @@ public class XmlParser {
 			messageType = MessageType.FILERESPONSE;
 		}
 		
+		
+//		decrypt
+		if((messageType != MessageType.KEYRESPONSE) && (messageType != MessageType.KEYREQUEST)){
+			encryptionHandler = new EncryptionHandler(myData.key, myData.aes);
+			Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
+			NodeList encryptedChilds = encrypted.getChildNodes();
+			for (int i = 0; i < encryptedChilds.getLength(); i++) {
+				
+				
+				String stringToBeDecrypted = encryptedChilds.item(i).getTextContent();
+				
+				String plainText = "";
+				try {
+					plainText = encryptionHandler.decrypt(stringToBeDecrypted);
+				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
+						| NoSuchPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				encryptedChilds.item(i).setTextContent(plainText);
+				
+			}
+		}
+		
+		//make stuff for msg
+		
+		Element msg = (Element) xmlDoc.getElementsByTagName("message").item(0);
+		String sender = msg.getAttribute("sender");
+		
+		
+		Element textElem = (Element) xmlDoc.getElementsByTagName("text").item(0);
+		String colorStr = textElem.getAttribute("color");
+		
+		String text = textElem.getTextContent();
+		Color color = buildColorFromString(colorStr);
+		
+		//de-ecsape necessary fields here
+		text = deEscapeXMLChars(text);
+		sender = deEscapeXMLChars(sender);
+		
+		
+		
+
+		
 		Message outMsg;
 		//Only add key to message if it was set before
 		if(isKeyResponseType) {
@@ -156,6 +180,9 @@ public class XmlParser {
 		} else if(isFileResponseType) {
 			//This is a file response message
 			outMsg = new Message(text, sender, color, messageType, reply);
+		} else if(isKeyRequestType) {
+			//This is a standard message
+			outMsg = new Message(text, sender, color, messageType);
 		} else {		
 			//This is a standard message
 			outMsg = new Message(text, sender, color, messageType);
@@ -163,34 +190,51 @@ public class XmlParser {
 		
 		return outMsg;
 	}
-
+	
+	
+	//method related to send in client/server.
 	public String MessageToXmlString (Message message) {
 		//build an xml String from a message
 		
 		//escape necessary fields here, to handle usage of XML-specific characters
 		message.text = escapeXMLChars(message.text);
 		message.sender = escapeXMLChars(message.sender);
+	
+		Document xmlDoc = null;
+		try {
+			xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+		} catch (ParserConfigurationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
 		
 		
+		//template
+		Element msgElem = xmlDoc.createElement("message");
+		Element encryptedElem = xmlDoc.createElement("encrypted");
+		Element textElem = xmlDoc.createElement("text");
+		textElem.setTextContent(message.text);
 		
-		String retStr = 
-				"<message sender=" + "\"" + message.sender + "\">"
-					+ "<encrypted type=" + "\"" + "caesar" + "\">"
-					+ "<text color=" + "\"" + message.color.toString() + "\">"
-						+ encryptionHandler.encryptCaesar(message.text)
-					+ "</text>"
-					+ "</encrypted>"
-				+ "</message>"
-					;
+		//build tree
+		xmlDoc.appendChild(msgElem);
+		msgElem.appendChild(encryptedElem);
+		encryptedElem.appendChild(textElem);
+	
+		//set attributes
+		msgElem.setAttribute("sender", message.sender);
+		textElem.setAttribute("color", message.color.toString());
 		
-		int strLen = retStr.length();
+		
 		//add disconnected tag if message contains connected = false.
 		if(message.messageType == MessageType.DISCONNECT){
-			retStr = retStr.substring(0, strLen - 10) + "<disconnect/>" + retStr.substring(strLen - 10, strLen);
+			msgElem.appendChild(xmlDoc.createElement("disconnect"));
 		}
 		
 		if(message.messageType == MessageType.KEYREQUEST) {
-			retStr = retStr.substring(0, strLen - 10) + "<keyrequest/>" + retStr.substring(strLen - 10, strLen);
+			Element keyReqElem = xmlDoc.createElement("keyrequest");
+//			keyElem.setAttribute("type", arg1);
+			keyReqElem.setTextContent(message.text);
+			msgElem.appendChild(keyReqElem);
 		}
 		
 		if(message.messageType == MessageType.KEYRESPONSE) {
@@ -201,20 +245,19 @@ public class XmlParser {
 			} else {
 				type = "caesar";
 			}
+			Element keyElem = xmlDoc.createElement("keyresponse");
+			keyElem.setAttribute("key", myData.key);
+			keyElem.setAttribute("type", type);
+			keyElem.setTextContent(message.text);
+			msgElem.appendChild(keyElem);
 			
-			retStr = retStr.substring(0, strLen - 10) + "<keyresponse> +"
-					+ "<key>" + message.key + "</key>"
-					+ "<type>" + type + "</type>"
-					+ "</keyresponse>"
-					+ retStr.substring(strLen - 10, strLen);
 		}
 		
 		if(message.messageType == MessageType.FILEREQUEST) {
-			retStr = retStr.substring(0, strLen - 10) + "<filerequest> +"
-					+ "<filename>" + message.fileName + "</filename>"
-					+ "<size>" + message.fileSize + "</size>"
-					+ "</filerequest>"
-					+ retStr.substring(strLen - 10, strLen);
+			Element fileReqElem = xmlDoc.createElement("filerequest");
+			fileReqElem.setAttribute("size", String.valueOf(message.fileSize));
+			fileReqElem.setAttribute("type", message.fileName);
+			msgElem.appendChild(fileReqElem);
 		}
 		
 		if(message.messageType == MessageType.FILERESPONSE) {
@@ -223,14 +266,54 @@ public class XmlParser {
 			if (message.fileReply) {
 				reply = "yes";
 			}
+			Element fileElem = xmlDoc.createElement("filerequest");
+			fileElem.setAttribute("reply", reply);
+			fileElem.setAttribute("port", "5555");
+			msgElem.appendChild(fileElem);
 			
-			retStr = retStr.substring(0, strLen - 10) + "<fileresponse> +"
-					+ "<reply>" + reply + "</reply>"
-					+ "</fileresponse>"
-					+ retStr.substring(strLen - 10, strLen);
 		}
+		
+		//encrypt
+		if((message.messageType != MessageType.KEYRESPONSE) && (message.messageType != MessageType.KEYREQUEST)){
+			encryptionHandler = new EncryptionHandler(user.key, user.aes);
+			Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
+			NodeList encryptedChilds = encrypted.getChildNodes();
+			for (int i = 0; i < encryptedChilds.getLength(); i++) {
 				
-		return  retStr;
+				
+				String stringToBeEncrypted = encryptedChilds.item(i).getTextContent();
+				
+				String plainText = "";
+				try {
+					plainText = encryptionHandler.encrypt(stringToBeEncrypted);
+				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
+						| NoSuchPaddingException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+
+				encryptedChilds.item(i).setTextContent(plainText);
+				
+			}
+		}
+		
+		
+		
+		String xmlString = "";
+		try {
+			TransformerFactory tf = TransformerFactory.newInstance();
+			Transformer transformer = tf.newTransformer();
+			transformer.setOutputProperty(OutputKeys.OMIT_XML_DECLARATION, "yes");
+			StringWriter writer = new StringWriter();
+			transformer.transform(new DOMSource(xmlDoc), new StreamResult(writer));
+			xmlString = writer.getBuffer().toString().replaceAll("\n|\r", "");
+		} catch (IllegalArgumentException | TransformerFactoryConfigurationError | TransformerException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+				
+		return xmlString;
 	}
 	
 	private Document buildXMLDocumentFromString(String xml) throws SAXException, IOException, ParserConfigurationException {
@@ -276,6 +359,15 @@ public class XmlParser {
 		b = Integer.parseInt(colorStr.substring(indexB + 2, colorStr.indexOf("]", indexB) ));
 		
 		return new Color(r,g,b);
+	}
+	
+//	to add private boolean checkNode(string tocheck){
+//	retBoolean = false;
+//	if(}
+
+	public void setUser(User receiverUser) {
+		this.user = receiverUser;
+		
 	}
 	
 }

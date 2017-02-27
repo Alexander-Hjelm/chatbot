@@ -20,7 +20,7 @@ public class Client extends CommunicationsHandler{
 	private Thread t;
 	private MyData myData;
 	private boolean serverUp;
-	private User serverUser;
+	private User serverUser = null;
 
 	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
 		this.myData = myData;
@@ -113,6 +113,9 @@ public class Client extends CommunicationsHandler{
 	public void send(Message msg) {
 		try {
 			XmlParser xmlParser = new XmlParser(myData);
+			if(serverUser != null){
+				xmlParser.setUser(serverUser);
+			}
 			String xml = xmlParser.MessageToXmlString(msg);
 
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
