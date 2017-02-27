@@ -110,9 +110,9 @@ public class ChatUI extends JFrame{
 
 	                 
 //	         		 Check for xml errors,  \o/
-	                 XmlParser xmlParser = new XmlParser(myData);
-	                 xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(new Message(myData.userName, myMessagePane.getText(), myData.color)));
-	         		
+//	                 XmlParser xmlParser = new XmlParser(myData);
+//	                 xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(new Message(myData.userName, myMessagePane.getText(), myData.color)));
+//	         		
 	         		myMessagePane.setText("");
 	             }
 	         }
