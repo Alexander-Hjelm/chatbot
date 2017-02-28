@@ -91,8 +91,9 @@ public class XmlParser {
 		boolean isFileRequestType = false;
 		if(!(connectionNode == null)){
 			isFileRequestType = true;
-			fileName = xmlDoc.getElementsByTagName("filename").item(0).getTextContent();	//Extract file name from message
-			size = Long.parseLong(xmlDoc.getElementsByTagName("size").item(0).getTextContent());	//Extract file size from message
+			Element fileElem = (Element) xmlDoc.getElementsByTagName("filerequest").item(0);
+			fileName = fileElem.getAttribute("name");	//Extract file name from message
+			size = Long.parseLong(fileElem.getAttribute("size"));	//Extract file size from message
 		}
 		
 		//check to see if there's an <fileresponse\> tag. Assume connected, but if tag exist, change status. 
@@ -101,7 +102,8 @@ public class XmlParser {
 		boolean reply = false;
 		if(!(connectionNode == null)){
 			isFileResponseType = true;
-			if (xmlDoc.getElementsByTagName("reply").item(0).getTextContent().equals("yes")) {
+			Element fileElem = (Element) xmlDoc.getElementsByTagName("fileresponse").item(0);
+			if (fileElem.getAttribute("reply").equals("yes")) {
 				//Message contained the reply yes
 				reply = true;
 			}
@@ -129,11 +131,11 @@ public class XmlParser {
 		if((messageType != MessageType.KEYRESPONSE) && (messageType != MessageType.KEYREQUEST)){
 			encryptionHandler = new EncryptionHandler(myData.key, myData.aes);
 			Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
-			NodeList encryptedChilds = encrypted.getChildNodes();
-			for (int i = 0; i < encryptedChilds.getLength(); i++) {
+			NodeList encryptedChildren = encrypted.getChildNodes();
+			for (int i = 0; i < encryptedChildren.getLength(); i++) {
 				
 				
-				String stringToBeDecrypted = encryptedChilds.item(i).getTextContent();
+				String stringToBeDecrypted = encryptedChildren.item(i).getTextContent();
 				
 				String plainText = "";
 				try {
@@ -144,7 +146,7 @@ public class XmlParser {
 					e.printStackTrace();
 				}
 
-				encryptedChilds.item(i).setTextContent(plainText);
+				encryptedChildren.item(i).setTextContent(plainText);
 				
 			}
 		}
@@ -266,10 +268,11 @@ public class XmlParser {
 			if (message.fileReply) {
 				reply = "yes";
 			}
-			Element fileElem = xmlDoc.createElement("filerequest");
+			Element fileElem = xmlDoc.createElement("fileresponse");
 			fileElem.setAttribute("reply", reply);
 			fileElem.setAttribute("port", "5555");
 			msgElem.appendChild(fileElem);
+			System.out.println(fileElem.getAttribute("reply"));
 			
 		}
 		

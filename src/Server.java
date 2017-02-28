@@ -101,9 +101,10 @@ public Server(int portIn, MyData myData) throws IOException {
 		//File response message
 		else if (msg.messageType == MessageType.FILERESPONSE) {
 			if(msg.fileReply) {
-				UI.updateMessageArea(new Message("Reciever has accepted your file", "System", Color.BLACK));
+				UI.updateMessageArea(new Message("Reciever has accepted your file.", "System", Color.BLACK));
+				//sendFile(file); for later? 
 			} else {
-				UI.updateMessageArea(new Message("Reciever did not accepted your file", "System", Color.BLACK));
+				UI.updateMessageArea(new Message("Reciever did not accepted your file.", "System", Color.BLACK));
 			}
 		}
 	}
