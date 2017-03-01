@@ -21,6 +21,8 @@ public class Client extends CommunicationsHandler{
 	private MyData myData;
 	private boolean serverUp;
 	private User serverUser = null;
+	private FileServer fileServer;
+	private FileClient fileClient;
 
 	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
 		this.myData = myData;
@@ -103,6 +105,8 @@ public class Client extends CommunicationsHandler{
 		else if (msg.messageType == MessageType.FILERESPONSE) {
 			if(msg.fileReply) {
 				UI.updateMessageArea(new Message("Reciever has accepted your file", "System", Color.BLACK));
+				//wait for connection and send file once connection has been established
+				fileServer.startServer(msg.port);
 			} else {
 				UI.updateMessageArea(new Message("Reciever did not accepted your file", "System", Color.BLACK));
 			}
@@ -166,6 +170,8 @@ public class Client extends CommunicationsHandler{
 		if (file.exists()) {
 			Message fileRequestMessage = new Message(text, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
+			// Initialize file server class
+			fileServer = new FileServer(file);
 		}
 	}
 	
@@ -173,6 +179,10 @@ public class Client extends CommunicationsHandler{
 	public void sendFileResponse(boolean reply, int port, String additionalText) {
 		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
 		send(fileResponseMessage);
+		// If yes, Initialize file client class, recieve file at once
+		if (reply) {
+			fileClient = new FileClient(singleClientUser.adress, port);	//Change single client user for later
+		}
 	}
 	
 }

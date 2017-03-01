@@ -24,6 +24,8 @@ public class Server extends CommunicationsHandler {
 	private boolean clientsConnected;
 	private ArrayList<User> clientUsers = new ArrayList<User>();
 	private User singleClientUser = null;
+	private FileServer fileServer;
+	private FileClient fileClient;
 
 public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;
@@ -102,7 +104,8 @@ public Server(int portIn, MyData myData) throws IOException {
 		else if (msg.messageType == MessageType.FILERESPONSE) {
 			if(msg.fileReply) {
 				UI.updateMessageArea(new Message("Reciever has accepted your file.", "System", Color.BLACK));
-				//sendFile(file); for later? 
+				//wait for connection and send file once connection has been established
+				fileServer.startServer(msg.port);
 			} else {
 				UI.updateMessageArea(new Message("Reciever did not accepted your file.", "System", Color.BLACK));
 			}
@@ -158,13 +161,19 @@ public Server(int portIn, MyData myData) throws IOException {
 		if (file.exists()) {
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
+			// Initialize file server class
+			fileServer = new FileServer(file);
 		}
 	}
 	
 	@Override
-	public void sendFileResponse(boolean reply, String additionalText) {
-		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply);
+	public void sendFileResponse(boolean reply, int port, String additionalText) {
+		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
 		send(fileResponseMessage);
+		// If yes, Initialize file client class, recieve file at once
+		if (reply) {
+			fileClient = new FileClient(singleClientUser.adress, port);	//Change single client user for later
+		}
 	}
 	
 }
