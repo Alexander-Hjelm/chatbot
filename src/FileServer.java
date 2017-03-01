@@ -1,8 +1,8 @@
-import java.io.BufferedInputStream;
-import java.io.DataInputStream;
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -12,8 +12,8 @@ public class FileServer implements Runnable{
 	private File file;
 	private ServerSocket server;
 	private Socket socket;
-	private DataInputStream streamIn;
-	private FileOutputStream fileStreamOut;
+	private DataOutputStream streamOut;
+	private FileInputStream fileStreamIn;
 	private Thread t;
 	
 	public FileServer(File file) {
@@ -38,40 +38,40 @@ public class FileServer implements Runnable{
 	@Override
 	public void run() {
 
-		while (t != null) {
-
 			try {
-				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+				streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			
 			try {
-	            fileStreamOut = new FileOutputStream(this.file);
-	        } catch (FileNotFoundException ex) {
-	            System.out.println("File not found. ");
-	        }
+				fileStreamIn = new FileInputStream(file);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
 
 	        byte[] bytes = new byte[(int) file.length()];
 
 	        int count;
 	        try {
-				while ((count = streamIn.read(bytes)) > 0) {
-					fileStreamOut.write(bytes, 0, count);
+				while ((count = fileStreamIn.read(bytes)) > 0) {
+					streamOut.write(bytes, 0, count);
 				}
 	        } catch (IOException e) {
 				e.printStackTrace();
 			}
 	        
-	        try{
-		        fileStreamOut.close();
-		        streamIn.close();
+	        try {
+		        fileStreamIn.close();
+		        streamOut.close();
 		        socket.close();
 		        server.close();
 	        } catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-	}	
-	
+
 }
+
+
+
