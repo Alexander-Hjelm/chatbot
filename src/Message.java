@@ -9,6 +9,7 @@ public class Message {
 	public String fileName;
 	public long fileSize;
 	public boolean fileReply;	//true = yes, false = no
+	public int port;
 	
 	public MessageType messageType;
 	
@@ -47,13 +48,14 @@ public class Message {
 		this.fileSize = fileSize;
 	}
 
-	public Message(String text, String sender, Color color, MessageType messageType, boolean fileReply) {
+	public Message(String text, String sender, Color color, MessageType messageType, boolean fileReply, int port) {
 		//File response
 		this.text = text;
 		this.sender = sender;
 		this.color = color;
 		this.messageType = messageType;
 		this.fileReply = fileReply;
+		this.port = port;
 	}
 	
 }

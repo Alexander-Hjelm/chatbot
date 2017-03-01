@@ -100,9 +100,12 @@ public class XmlParser {
 		connectionNode = xmlDoc.getElementsByTagName("fileresponse").item(0);
 		boolean isFileResponseType = false;
 		boolean reply = false;
+		int port = 0;
 		if(!(connectionNode == null)){
 			isFileResponseType = true;
 			Element fileElem = (Element) xmlDoc.getElementsByTagName("fileresponse").item(0);
+			//Set port for file transfer
+			port = Integer.parseInt(fileElem.getAttribute("port"));
 			if (fileElem.getAttribute("reply").equals("yes")) {
 				//Message contained the reply yes
 				reply = true;
@@ -181,7 +184,7 @@ public class XmlParser {
 			outMsg = new Message(text, sender, color, messageType, fileName, size);
 		} else if(isFileResponseType) {
 			//This is a file response message
-			outMsg = new Message(text, sender, color, messageType, reply);
+			outMsg = new Message(text, sender, color, messageType, reply, port);
 		} else if(isKeyRequestType) {
 			//This is a standard message
 			outMsg = new Message(text, sender, color, messageType);
@@ -268,9 +271,10 @@ public class XmlParser {
 			if (message.fileReply) {
 				reply = "yes";
 			}
+			int port = message.port;
 			Element fileElem = xmlDoc.createElement("fileresponse");
 			fileElem.setAttribute("reply", reply);
-			fileElem.setAttribute("port", "5555");
+			fileElem.setAttribute("port", Integer.toString(port));
 			msgElem.appendChild(fileElem);
 			System.out.println(fileElem.getAttribute("reply"));
 			

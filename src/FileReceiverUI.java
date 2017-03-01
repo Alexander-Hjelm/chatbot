@@ -76,9 +76,9 @@ public class FileReceiverUI extends JFrame {
         {
             public void windowClosing(WindowEvent e)
             {
-            	
-            	communicationsHandler.sendFileResponse(false, optionalMessageTextField.getText());
-   	        	 dispose();
+            	int port = Integer.parseInt(portTextField.getText());
+            	communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText());
+   	        	dispose();
 
             }
         });
@@ -96,17 +96,19 @@ public class FileReceiverUI extends JFrame {
 	private void buttonAction() {
 		yesButton = new JButton("Yes");
 		noButton = new JButton("No");
-		
+
 		yesButton.addActionListener(new ActionListener() {
-	         public void actionPerformed(ActionEvent e) {
-	           	 communicationsHandler.sendFileResponse(true, optionalMessageTextField.getText());
-	           	 dispose();
+			public void actionPerformed(ActionEvent e) {
+        	int port = Integer.parseInt(portTextField.getText());
+        		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText());
+	           	dispose();
 	         }
 	      });
 		
 		noButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 communicationsHandler.sendFileResponse(false, optionalMessageTextField.getText());
+            	 int port = Integer.parseInt(portTextField.getText());
+	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText());
 	        	 dispose();
 	         }
 	      });
