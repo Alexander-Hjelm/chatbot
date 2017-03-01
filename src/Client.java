@@ -181,7 +181,7 @@ public class Client extends CommunicationsHandler{
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
-			fileClient = new FileClient(singleClientUser.adress, port);	//Change single client user for later
+			fileClient = new FileClient(serverUser.adress, port);
 		}
 	}
 	
