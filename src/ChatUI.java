@@ -236,8 +236,8 @@ public class ChatUI extends JFrame{
 		
 	}
 	
-	public void showFileReceiverUI() {
-		fileReceiverUI = new FileReceiverUI(communicationsHandler);
+	public void showFileReceiverUI(String fileName, long fileSize) {
+		fileReceiverUI = new FileReceiverUI(communicationsHandler, fileName, fileSize);
 	}
 	
 	private void sendMessage() {

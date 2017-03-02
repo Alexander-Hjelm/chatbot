@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 
@@ -98,7 +99,7 @@ public class Client extends CommunicationsHandler{
 		
 		//File request message
 		else if (msg.messageType == MessageType.FILEREQUEST) {
-			UI.showFileReceiverUI();
+			UI.showFileReceiverUI(msg.fileName, msg.fileSize);
 		}
 		
 		//File response message
@@ -176,12 +177,12 @@ public class Client extends CommunicationsHandler{
 	}
 	
 	@Override
-	public void sendFileResponse(boolean reply, int port, String additionalText) {
+	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize) {
 		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
-			fileClient = new FileClient(serverUser.adress, port);
+			fileClient = new FileClient(serverUser.adress, port, fileName, fileSize);
 		}
 	}
 	

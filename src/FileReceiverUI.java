@@ -28,10 +28,14 @@ public class FileReceiverUI extends JFrame {
 	private JButton noButton;
 	private JTextField portTextField;
 	private JTextField optionalMessageTextField;
+	private String fileName;
+	private long fileSize;
 	
-	public FileReceiverUI(CommunicationsHandler communicationsHandlerIn) {
+	public FileReceiverUI(CommunicationsHandler communicationsHandlerIn, String fileName, long fileSize) {
 		super("Accept incoming file?");
 		this.communicationsHandler = communicationsHandlerIn;
+		this.fileName = fileName;
+		this.fileSize = fileSize;
 		panel = new JPanel();
 		
 		buttonAction();
@@ -77,7 +81,7 @@ public class FileReceiverUI extends JFrame {
             public void windowClosing(WindowEvent e)
             {
             	int port = Integer.parseInt(portTextField.getText());
-            	communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText());
+            	communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), "", 0);
    	        	dispose();
 
             }
@@ -100,7 +104,7 @@ public class FileReceiverUI extends JFrame {
 		yesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
         	int port = Integer.parseInt(portTextField.getText());
-        		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText());
+        		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText(), fileName, fileSize);
 	           	dispose();
 	         }
 	      });
@@ -108,7 +112,7 @@ public class FileReceiverUI extends JFrame {
 		noButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
             	 int port = Integer.parseInt(portTextField.getText());
-	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText());
+	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), fileName, fileSize);
 	        	 dispose();
 	         }
 	      });

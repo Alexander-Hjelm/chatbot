@@ -97,7 +97,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		
 		//File request message
 		else if (msg.messageType == MessageType.FILEREQUEST) {
-			UI.showFileReceiverUI();
+			UI.showFileReceiverUI(msg.fileName, msg.fileSize);
 		}
 		
 		//File response message
@@ -167,12 +167,12 @@ public Server(int portIn, MyData myData) throws IOException {
 	}
 	
 	@Override
-	public void sendFileResponse(boolean reply, int port, String additionalText) {
+	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize) {
 		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
-			fileClient = new FileClient(singleClientUser.adress, port);	//Change single client user for later
+			fileClient = new FileClient(singleClientUser.adress, port, fileName, fileSize);	//Change single client user for later
 		}
 	}
 	

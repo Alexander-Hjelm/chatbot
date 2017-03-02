@@ -18,7 +18,10 @@ public class FileClient implements Runnable{
 	private String fileName;
 	private long fileSize;
 	
-	public FileClient(String addr, int port) {
+	public FileClient(String addr, int port, String fileName, long fileSize) {
+		this.fileName = fileName;
+		this.fileSize = fileSize;
+		
 		try {
 			socket = new Socket(addr, port);
 		} catch (UnknownHostException e) {
