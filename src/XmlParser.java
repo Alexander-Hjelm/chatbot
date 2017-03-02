@@ -261,7 +261,7 @@ public class XmlParser {
 		if(message.messageType == MessageType.FILEREQUEST) {
 			Element fileReqElem = xmlDoc.createElement("filerequest");
 			fileReqElem.setAttribute("size", String.valueOf(message.fileSize));
-			fileReqElem.setAttribute("type", message.fileName);
+			fileReqElem.setAttribute("name", message.fileName);
 			msgElem.appendChild(fileReqElem);
 		}
 		
