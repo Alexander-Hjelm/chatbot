@@ -74,6 +74,10 @@ public class FileClient implements Runnable{
 	        } catch (IOException e) {
 				e.printStackTrace();
 			}
+	        
+	        if (socket.isClosed()) {
+	        	return;
+	        }
 		}
 	}
 }

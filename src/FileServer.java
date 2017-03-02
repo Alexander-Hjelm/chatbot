@@ -69,6 +69,10 @@ public class FileServer implements Runnable{
 	        } catch (IOException e) {
 				e.printStackTrace();
 			}
+	        
+	        if (server.isClosed()) {
+	        	return;
+	        }
 		}
 
 }
