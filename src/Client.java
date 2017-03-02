@@ -93,8 +93,10 @@ public class Client extends CommunicationsHandler{
 		
 		//Key response message
 		else if (msg.messageType == MessageType.KEYRESPONSE) {
-			//Store sender as User
-			serverUser = new User(msg.sender, socket.getInetAddress().getHostAddress(), msg.key, msg.aes );
+			//Store sender in Users
+			String adress = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+			adress = adress.replace("localhost", "");
+			serverUser  = new User(msg.sender, adress, msg.key, msg.aes );
 		}
 		
 		//File request message

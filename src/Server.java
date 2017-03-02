@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.EOFException;
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
@@ -44,6 +45,11 @@ public Server(int portIn, MyData myData) throws IOException {
 	@Override
 	public void sendKeyRequest() {
 		//First thing: send key request message
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
 	}
 	
@@ -92,7 +98,9 @@ public Server(int portIn, MyData myData) throws IOException {
 		//Key response message
 		else if (msg.messageType == MessageType.KEYRESPONSE) {
 			//Store sender in Users
-			singleClientUser  = new User(msg.sender, socket.getRemoteSocketAddress().toString(), msg.key, msg.aes );
+			String adress = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
+			adress = adress.replace("localhost", "");
+			singleClientUser  = new User(msg.sender, adress, msg.key, msg.aes );
 		}
 		
 		//File request message
