@@ -15,9 +15,11 @@ public class FileServer implements Runnable{
 	private DataOutputStream streamOut;
 	private FileInputStream fileStreamIn;
 	private Thread t;
+	private ChatUI chatUI;
 	
-	public FileServer(File file) {
+	public FileServer(File file, ChatUI chatUI) {
 		this.file = file;
+		this.chatUI = chatUI;
 	}
 
 	public void startServer(int port) {
@@ -53,9 +55,15 @@ public class FileServer implements Runnable{
 	        byte[] bytes = new byte[(int) file.length()];
 
 	        int count;
+	        int maxCount = 0;
 	        try {
 				while ((count = fileStreamIn.read(bytes)) > 0) {
 					streamOut.write(bytes, 0, count);
+					
+					//Fill progress bar on ChatUI
+					maxCount = Math.max(maxCount, count);
+					int progressBarFill = (maxCount - count)/maxCount;
+					chatUI.setProgressBarFill(progressBarFill);
 				}
 	        } catch (IOException e) {
 				e.printStackTrace();
