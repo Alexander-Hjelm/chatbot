@@ -14,6 +14,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -45,7 +46,8 @@ public class ChatUI extends JFrame{
 	private JButton newChatButton;
 	private JFileChooser fileChooser = new JFileChooser();
 	private FileReceiverUI fileReceiverUI;
-
+	private JProgressBar progressBar = new JProgressBar();
+	
 	private MyData myData;
 	
 	
@@ -187,6 +189,12 @@ public class ChatUI extends JFrame{
         c.gridx = 1;
         c.weightx = 1;
         panel.add(sendFileButton,c);
+        
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 3;
+        c.gridx = 0;
+        c.weightx = 1;
+        panel.add(progressBar,c);
         
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 0;
