@@ -224,7 +224,9 @@ public Server(int portIn, MyData myData) throws IOException {
 			//Key request message
 			else if (msg.messageType == MessageType.KEYREQUEST) {
 				//Send key response.
-				send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
+				Message msgOut = new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes);
+				int userIndex = socketPool.indexOf(listenSocket);
+				sendToUser(msgOut, clientUsers.get(userIndex), listenSocket);
 			}
 			
 			//Key response message
