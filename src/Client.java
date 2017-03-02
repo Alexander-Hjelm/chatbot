@@ -92,7 +92,7 @@ public class Client extends CommunicationsHandler{
 		//Key request message
 		else if (msg.messageType == MessageType.KEYREQUEST) {
 			//Send key response.
-			send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
+			send(new Message(msg.text, myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
 		}
 		
 		//Key response message
