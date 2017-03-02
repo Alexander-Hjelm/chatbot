@@ -170,7 +170,7 @@ public Server(int portIn, MyData myData) throws IOException {
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file);
+			fileServer = new FileServer(file, UI);
 		}
 	}
 	
@@ -180,7 +180,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
-			fileClient = new FileClient(singleClientUser.adress, port, fileName, fileSize);	//Change single client user for later
+			fileClient = new FileClient(singleClientUser.adress, port, fileName, fileSize, UI);	//Change single client user for later
 		}
 	}
 	

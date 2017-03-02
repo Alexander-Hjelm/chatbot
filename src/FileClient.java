@@ -16,10 +16,12 @@ public class FileClient implements Runnable{
 	private Thread t;
 	private String fileName;
 	private long fileSize;
+	private ChatUI chatUI;
 	
-	public FileClient(String addr, int port, String fileName, long fileSize) {
+	public FileClient(String addr, int port, String fileName, long fileSize, ChatUI chatUI) {
 		this.fileName = fileName;
 		this.fileSize = fileSize;
+		this.chatUI = chatUI;
 		
 		try {
 			socket = new Socket(addr, port);

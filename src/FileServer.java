@@ -15,9 +15,11 @@ public class FileServer implements Runnable{
 	private DataOutputStream streamOut;
 	private FileInputStream fileStreamIn;
 	private Thread t;
+	private ChatUI chatUI;
 	
-	public FileServer(File file) {
+	public FileServer(File file, ChatUI chatUI) {
 		this.file = file;
+		this.chatUI = chatUI;
 	}
 
 	public void startServer(int port) {
