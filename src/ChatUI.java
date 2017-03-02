@@ -46,7 +46,7 @@ public class ChatUI extends JFrame{
 	private JButton newChatButton;
 	private JFileChooser fileChooser = new JFileChooser();
 	private FileReceiverUI fileReceiverUI;
-	private JProgressBar progressBar = new JProgressBar();
+	private JProgressBar progressBar = new JProgressBar(0, 100);
 	
 	private MyData myData;
 	
@@ -283,4 +283,8 @@ public class ChatUI extends JFrame{
 //		this.messageArea.append(msg.sender + ": " + msg.text + "\n");
 	}
 
+	public void setProgressBarFill (int i) {
+		progressBar.setValue(i);
+	}
+	
 }
