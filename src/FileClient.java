@@ -10,7 +10,6 @@ import java.net.UnknownHostException;
 
 public class FileClient implements Runnable{
 
-	private ServerSocket server;
 	private Socket socket;
 	private DataInputStream streamIn;
 	private FileOutputStream fileStreamOut;
@@ -42,43 +41,39 @@ public class FileClient implements Runnable{
 
 		while (t != null) {
 
-			while (t != null) {
+			try {
+				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			File file = new File(fileName);
 
-				try {
-					streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-				} catch (IOException e1) {
-					e1.printStackTrace();
+            try {
+				fileStreamOut = new FileOutputStream(file);
+			} catch (FileNotFoundException e1) {
+				e1.printStackTrace();
+			}
+
+
+	        byte[] bytes = new byte[(int) fileSize];
+
+	        int count;
+	        try {
+				while ((count = streamIn.read(bytes)) > 0) {
+					fileStreamOut.write(bytes, 0, count);
 				}
-				
-				File file = new File("C:\\" + fileName);
-
-	            try {
-					fileStreamOut = new FileOutputStream(file);
-				} catch (FileNotFoundException e1) {
-					e1.printStackTrace();
-				}
-
-
-		        byte[] bytes = new byte[(int) fileSize];
-
-		        int count;
-		        try {
-					while ((count = streamIn.read(bytes)) > 0) {
-						fileStreamOut.write(bytes, 0, count);
-					}
-		        } catch (IOException e) {
-					e.printStackTrace();
-				}
-		        
-		        try{
-			        fileStreamOut.close();
-			        streamIn.close();
-			        socket.close();
-			        server.close();
-		        } catch (IOException e) {
-					e.printStackTrace();
-				}
-			}	
+	        } catch (IOException e) {
+				e.printStackTrace();
+			}
+	        
+	        try{
+		        fileStreamOut.close();
+		        streamIn.close();
+		        socket.close();
+	        } catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 }
