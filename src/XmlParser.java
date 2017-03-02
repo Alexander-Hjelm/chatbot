@@ -235,10 +235,13 @@ public class XmlParser {
 			msgElem.appendChild(xmlDoc.createElement("disconnect"));
 		}
 		
+		
+
 		if(message.messageType == MessageType.KEYREQUEST) {
 			Element keyReqElem = xmlDoc.createElement("keyrequest");
 //			keyElem.setAttribute("type", arg1);
 			keyReqElem.setTextContent(message.text);
+//			textElem.setTextContent("");
 			msgElem.appendChild(keyReqElem);
 		}
 		
@@ -254,6 +257,7 @@ public class XmlParser {
 			keyElem.setAttribute("key", myData.key);
 			keyElem.setAttribute("type", type);
 			keyElem.setTextContent(message.text);
+
 			msgElem.appendChild(keyElem);
 			
 		}
@@ -283,8 +287,7 @@ public class XmlParser {
 		//encrypt
 		if((message.messageType != MessageType.KEYRESPONSE) && (message.messageType != MessageType.KEYREQUEST)){
 			encryptionHandler = new EncryptionHandler(user.key, user.aes);
-			Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
-			NodeList encryptedChilds = encrypted.getChildNodes();
+			NodeList encryptedChilds = encryptedElem.getChildNodes();
 			for (int i = 0; i < encryptedChilds.getLength(); i++) {
 				
 				

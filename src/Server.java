@@ -20,7 +20,8 @@ public class Server extends CommunicationsHandler {
 	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
-	private Thread t;
+	private Thread connectionThread;
+	private Thread listenerThread;
 	private MyData myData;
 	private boolean clientsConnected;
 	private ArrayList<User> clientUsers = new ArrayList<User>();
@@ -37,8 +38,6 @@ public Server(int portIn, MyData myData) throws IOException {
 	public void startServer() throws IOException {
 		
 		this.server = new ServerSocket((int) port);
-		socket = server.accept();
-		clientsConnected = true;
 		startThread();
 	}
 	
@@ -61,23 +60,32 @@ public Server(int portIn, MyData myData) throws IOException {
 	public void run() {
 
 		
-		while (t != null) {
-			//Listen for messages from client
+		while (connectionThread != null) {
 			//Wait for an incoming connection	
 			
-			try {
-				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
-				String xml = streamIn.readUTF();
-				XmlParser xmlParser = new XmlParser(myData);
-				Message msg = xmlParser.xmlStringToMessage(xml);
-				UI.updateMessageArea(msg);
-				handleMessageType(msg);
+
 				
-			} catch (UnknownHostException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+				try {
+					socket = server.accept();
+					clientsConnected = true;
+					listenerThread = new Thread(new MessageListener());
+					listenerThread.start();
+					Thread.sleep(500);
+					
+				} catch (IOException | InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+				// kill thread to make it behave as before. remove this later.
+//				connectionThread = null;
+				
+				
+				
+				
+
+				
+
 			
 		}
 	}	
@@ -86,7 +94,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		//Disconnect message
 		if(msg.messageType == MessageType.DISCONNECT){
 			clientsConnected = false;
-			t = null;
+			connectionThread = null;
 		}
 		
 		//Key request message
@@ -122,7 +130,7 @@ public Server(int portIn, MyData myData) throws IOException {
 	
 	@Override
 	public void send(Message msg) {
-
+		msg = handleOutMsg(msg);
 		try {
 			XmlParser xmlParser = new XmlParser(myData);
 			if(singleClientUser != null){
@@ -137,6 +145,13 @@ public Server(int portIn, MyData myData) throws IOException {
 		}
 	}
 	
+	private Message handleOutMsg(Message msgIn){
+		if(singleClientUser == null && msgIn.messageType != MessageType.KEYRESPONSE){
+			return new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST);
+		} 
+		return msgIn;
+	}
+	
 	@Override
 	public void setUI(ChatUI UI) {
 		this.UI = UI;
@@ -145,7 +160,7 @@ public Server(int portIn, MyData myData) throws IOException {
 	@Override
 	public void exit() throws IOException {
 		//kill thread, see while loop in run.
-		t = null;
+		connectionThread = null;
 		
 		//if clients are connected:
 		if(clientsConnected){
@@ -159,8 +174,8 @@ public Server(int portIn, MyData myData) throws IOException {
 
 	@Override
 	protected void startThread() {
-		this.t = new Thread(this);
-		t.start();
+		this.connectionThread = new Thread(this);
+		connectionThread.start();
 		
 	}
 	
@@ -182,6 +197,36 @@ public Server(int portIn, MyData myData) throws IOException {
 		if (reply) {
 			fileClient = new FileClient(singleClientUser.adress, port, fileName, fileSize);	//Change single client user for later
 		}
+	}
+	
+	
+	private class MessageListener implements Runnable{
+		
+		@Override
+		public void run() {
+			
+			
+			while (listenerThread != null){
+				try {
+					//Listen for messages from client
+					streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+					String xml = streamIn.readUTF();
+					XmlParser xmlParser = new XmlParser(myData);
+					Message msg = xmlParser.xmlStringToMessage(xml);
+					UI.updateMessageArea(msg);
+					handleMessageType(msg);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+
+			
+		}
+		
+			
+		
+		
 	}
 	
 }

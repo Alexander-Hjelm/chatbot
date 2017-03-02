@@ -36,6 +36,7 @@ public class Client extends CommunicationsHandler{
 		serverUp = true;
 	}
 	
+	//redundant method if things work:
 	@Override
 	public void sendKeyRequest() {
 		//First thing: send key request message
@@ -45,11 +46,14 @@ public class Client extends CommunicationsHandler{
 	public void connect(String adress, int port) throws UnknownHostException, IOException {
 		try {
 			socket = new Socket(adress, port);
+			startThread();
+			Thread.sleep(500);
+
 		} catch (Exception e) {
 			System.out.println("Trouble connecting to server. Closing program");
 			exit();
 		}
-		startThread();
+
 	}
 
 	@Override
@@ -118,6 +122,7 @@ public class Client extends CommunicationsHandler{
 
 	@Override
 	public void send(Message msg) {
+		msg = handleOutMsg(msg);
 		try {
 			XmlParser xmlParser = new XmlParser(myData);
 			if(serverUser != null){
@@ -131,6 +136,14 @@ public class Client extends CommunicationsHandler{
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	//user is null until a keysponse have been given from server/client. Here it just implies this message is the first one. 
+	private Message handleOutMsg(Message msgIn){
+		if(serverUser == null && msgIn.messageType != MessageType.KEYRESPONSE){
+			return new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST);
+		} 
+		return msgIn;
 	}
 	
 	@Override
