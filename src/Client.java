@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Frame;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -174,7 +175,13 @@ public class Client extends CommunicationsHandler{
 			e.printStackTrace();
 		}
 		//bye
-		System.exit(0);
+		socket.close();
+		UI.dispose();
+		
+		// if no windows are currently up, exit normally
+		if (Frame.getFrames().length == 0) {
+			System.exit(0);
+		}
 	
 	}
 

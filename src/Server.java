@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Frame;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -29,6 +30,7 @@ public class Server extends CommunicationsHandler {
 	private FileServer fileServer;
 	private FileClient fileClient;
 	private int bufferSize = 50;
+	private boolean isRunning;
 
 	private boolean listeningForKeyResponse = false;
 	private boolean listeningForFileResponse = false;
@@ -157,7 +159,14 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			send(exitMsg);
 		}
 
-		System.exit(0);
+		isRunning = false;
+		stopServer();
+		UI.dispose();
+		
+		// if no windows are currently up, exit normally
+		if (Frame.getFrames().length == 0) {
+			System.exit(0);
+		}
 	}
 
 
@@ -197,7 +206,6 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 	private class MessageListener implements Runnable{
 		private Socket listenSocket;
 		private DataInputStream streamIn;
-		private boolean isRunning;
 		
 		private MessageListener(Socket socketIn) {
 			listenSocket = socketIn;
