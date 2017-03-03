@@ -62,7 +62,7 @@ public class ChatUI extends JFrame{
 		createAndShowGUI(panel);
 		
 		// tell communicationsHandler, client or server that this ChatUI is their UI:
-		communicationsHandler.setUI(this);
+//		communicationsHandler.setUI(this);
 		
 		//Send Key request AFTER UI has been set, otherwise we get a NullPointerException on ChatUI
 //		communicationsHandler.sendKeyRequest();

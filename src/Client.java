@@ -25,19 +25,18 @@ public class Client extends CommunicationsHandler{
 	private FileServer fileServer;
 	private FileClient fileClient;
 
-	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
-		this.myData = myData;
-		destinationPort = portIn;
+	public Client(String adress, int portIn, MyData myDataIn) throws UnknownHostException, IOException {
+		this.myData = myDataIn;
+		this.destinationPort = portIn;
 		
-		//redundant method at the moment?
+		this.UI = new ChatUI(this, myData);
 		connect(adress, destinationPort);
 		
 		//if connect worked, a server is up.
-		serverUp = true;
+		this.serverUp = true;
+		
 	}
-	
-	//redundant method if things work:
-	@Override
+
 	public void sendKeyRequest() {
 		//First thing: send key request message
 		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
@@ -47,8 +46,6 @@ public class Client extends CommunicationsHandler{
 		try {
 			socket = new Socket(adress, port);
 			startThread();
-			Thread.sleep(500);
-
 		} catch (Exception e) {
 			System.out.println("Trouble connecting to server. Closing program");
 			exit();
@@ -92,7 +89,8 @@ public class Client extends CommunicationsHandler{
 		//Key request message
 		else if (msg.messageType == MessageType.KEYREQUEST) {
 			//Send key response.
-			send(new Message(msg.text, myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
+			send(new Message("{Key Response}", myData.userName, myData.color, MessageType.KEYRESPONSE, myData.key, myData.aes));
+			sendKeyRequest();
 		}
 		
 		//Key response message
@@ -122,7 +120,6 @@ public class Client extends CommunicationsHandler{
 
 	@Override
 	public void send(Message msg) {
-		msg = handleOutMsg(msg);
 		try {
 			XmlParser xmlParser = new XmlParser(myData);
 			if(serverUser != null){
@@ -138,18 +135,6 @@ public class Client extends CommunicationsHandler{
 		}
 	}
 	
-	//user is null until a keysponse have been given from server/client. Here it just implies this message is the first one. 
-	private Message handleOutMsg(Message msgIn){
-		if(serverUser == null && msgIn.messageType != MessageType.KEYRESPONSE){
-			return new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST);
-		} 
-		return msgIn;
-	}
-	
-	@Override
-	public void setUI(ChatUI UI) {
-		this.UI = UI;
-	}
 
 	@Override
 	public void exit() throws IOException {
