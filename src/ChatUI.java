@@ -13,6 +13,9 @@ import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 import javax.swing.JScrollPane;
@@ -47,6 +50,9 @@ public class ChatUI extends JFrame{
 	private JFileChooser fileChooser = new JFileChooser();
 	private FileReceiverUI fileReceiverUI;
 	private JProgressBar progressBar = new JProgressBar(0, 100);
+	private JMenuBar menuBar = new JMenuBar();
+	private JMenu menu = new JMenu("Menu");;
+	private JMenuItem newChatMenuItem;
 	
 	private MyData myData;
 	
@@ -68,8 +74,18 @@ public class ChatUI extends JFrame{
 //		communicationsHandler.sendKeyRequest();
 		//moved to server/client
 
-				
-
+		//Build menu bar
+		menuBar.add(menu);
+		
+		newChatMenuItem = new JMenuItem("Start new chat");
+		newChatMenuItem.addActionListener(new ActionListener() {
+	         public void actionPerformed(ActionEvent e) {
+	           	 IntroUI newIntroUI = new IntroUI();
+	         }
+	      });
+		
+		menu.add(newChatMenuItem);
+		this.setJMenuBar(menuBar);
 	}
 	
 	
