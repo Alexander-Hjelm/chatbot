@@ -29,6 +29,7 @@ public class Server extends CommunicationsHandler {
 	private ArrayList<Socket> socketPool = new ArrayList<Socket>();
 	private FileServer fileServer;
 	private FileClient fileClient;
+	private int bufferSize = 50;
 
 public Server(int portIn, MyData myData) throws IOException {
 	port = portIn;
@@ -171,7 +172,7 @@ public Server(int portIn, MyData myData) throws IOException {
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file, UI);
+			fileServer = new FileServer(file, UI, bufferSize);
 		}
 	}
 	
@@ -182,7 +183,7 @@ public Server(int portIn, MyData myData) throws IOException {
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
 			//made this ugly with clientusers.get(0).address. needs fixing
-			fileClient = new FileClient(clientUsers.get(0).adress, port, fileName, fileSize, UI);	//Change single client user for later
+			fileClient = new FileClient(clientUsers.get(0).adress, port, fileName, fileSize, UI, bufferSize);	//Change single client user for later
 		}
 	}
 	

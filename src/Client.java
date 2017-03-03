@@ -24,6 +24,7 @@ public class Client extends CommunicationsHandler{
 	private User serverUser = null;
 	private FileServer fileServer;
 	private FileClient fileClient;
+	private int bufferSize = 50;
 
 	public Client(String adress, int portIn, MyData myData) throws UnknownHostException, IOException {
 		this.myData = myData;
@@ -187,7 +188,7 @@ public class Client extends CommunicationsHandler{
 			Message fileRequestMessage = new Message(text, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file, UI);
+			fileServer = new FileServer(file, UI, bufferSize);
 		}
 	}
 	
@@ -197,7 +198,7 @@ public class Client extends CommunicationsHandler{
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
-			fileClient = new FileClient(serverUser.adress, port, fileName, fileSize, UI);
+			fileClient = new FileClient(serverUser.adress, port, fileName, fileSize, UI, bufferSize);
 		}
 	}
 	

@@ -17,11 +17,13 @@ public class FileClient implements Runnable{
 	private String fileName;
 	private long fileSize;
 	private ChatUI chatUI;
+	private int bufferSize;
 	
-	public FileClient(String addr, int port, String fileName, long fileSize, ChatUI chatUI) {
+	public FileClient(String addr, int port, String fileName, long fileSize, ChatUI chatUI, int bufferSize) {
 		this.fileName = fileName;
 		this.fileSize = fileSize;
 		this.chatUI = chatUI;
+		this.bufferSize = bufferSize;
 		
 		try {
 			socket = new Socket(addr, port);
