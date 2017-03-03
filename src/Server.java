@@ -111,10 +111,13 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			if (user != null) {
 				xmlParser.setUser(user);
 			}
-			String xml = xmlParser.MessageToXmlString(msg);
-			streamOut = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
-			streamOut.writeUTF(xml);
-			streamOut.flush();
+			if(s != null){
+				String xml = xmlParser.MessageToXmlString(msg);
+				streamOut = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
+				streamOut.writeUTF(xml);
+				streamOut.flush();
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -216,6 +219,9 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 				
 				//kill this thread
 				isRunning = false;
+				
+				//check sendToUser why this:
+				socketPool.set(socketPool.indexOf(listenSocket), null);
 
 				
 			}
