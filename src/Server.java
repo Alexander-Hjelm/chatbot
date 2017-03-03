@@ -18,7 +18,6 @@ public class Server extends CommunicationsHandler {
 	private int port;
 	private ServerSocket server;
 //	private Socket socket;
-	private DataInputStream streamIn;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
 	private Thread connectionThread;
@@ -31,10 +30,12 @@ public class Server extends CommunicationsHandler {
 	private FileClient fileClient;
 	private int bufferSize = 50;
 
-public Server(int portIn, MyData myData) throws IOException {
+public Server(int portIn, MyData myDataIn) throws IOException {
 	port = portIn;
-	this.myData = myData;
+	this.myData = myDataIn;
+	this.UI = new ChatUI(this, myData);
 	startServer();
+	
 } 	
 	
 	public void startServer() throws IOException {
@@ -43,15 +44,10 @@ public Server(int portIn, MyData myData) throws IOException {
 		startThread();
 	}
 	
-	@Override
-	public void sendKeyRequest() {
+	public void sendKeyRequest(Socket s, User user) {
 		//First thing: send key request message
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
+		Message requestMsg = new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST);
+		sendToUser(requestMsg, user, s);
 	}
 	
 	public void stopServer() throws IOException {
@@ -72,29 +68,26 @@ public Server(int portIn, MyData myData) throws IOException {
 					clientsConnected = true;
 					
 					Thread listenerThread = new Thread(new MessageListener(s));
+					
 					listenerThread.start();
 					threadPool.add(listenerThread);
 					socketPool.add(s);
-					clientUsers.add(null);
+					User connectedUser = null;
+					clientUsers.add(connectedUser);
+					sendKeyRequest(s,connectedUser);
 					
-					Thread.sleep(500);
+					
+					System.out.println(threadPool.size());
 					
 					
-					
-				} catch (IOException | InterruptedException e) {
+				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
 				// kill thread to make it behave as before. remove this later.
 //				connectionThread = null;
-				
-				
-				
-				
-
-				
-
+	
 			
 		}
 	}	
@@ -108,7 +101,6 @@ public Server(int portIn, MyData myData) throws IOException {
 
 			User receiverUser = clientUsers.get(i);
 			Socket receiverSocket = socketPool.get(i);
-			msg = handleOutMsg(msg,receiverUser);
 			sendToUser(msg,receiverUser,receiverSocket);
 
 		}
@@ -120,27 +112,19 @@ public Server(int portIn, MyData myData) throws IOException {
 			if (user != null) {
 				xmlParser.setUser(user);
 			}
-			String xml = xmlParser.MessageToXmlString(msg);
-			streamOut = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
-			streamOut.writeUTF(xml);
-			streamOut.flush();
+			if(s != null){
+				String xml = xmlParser.MessageToXmlString(msg);
+				streamOut = new DataOutputStream(new BufferedOutputStream(s.getOutputStream()));
+				streamOut.writeUTF(xml);
+				streamOut.flush();
+			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
 	}
 	
-	//check if this message is the first, if so make it a keyrequest.
-	private Message handleOutMsg(Message msgIn, User user){
-		if(user == null && msgIn.messageType != MessageType.KEYRESPONSE){
-			return new Message(msgIn.text, myData.userName, myData.color, MessageType.KEYREQUEST);
-		} 
-		return msgIn;
-	}
 	
-	@Override
-	public void setUI(ChatUI UI) {
-		this.UI = UI;
-	}
 
 	@Override
 	public void exit() throws IOException {
@@ -190,14 +174,22 @@ public Server(int portIn, MyData myData) throws IOException {
 	
 	private class MessageListener implements Runnable{
 		private Socket listenSocket;
+		private DataInputStream streamIn;
+		private boolean isRunning;
+		
 		private MessageListener(Socket socketIn) {
 			listenSocket = socketIn;
+			if(listenSocket != null){
+				isRunning = true;
+			}
+			
 		}
-		@Override
+		
+
 		public void run() {
 			
 			
-			while (true){
+			while (isRunning){
 				try {
 					//Listen for messages from client
 					streamIn = new DataInputStream(new BufferedInputStream(listenSocket.getInputStream()));
@@ -206,7 +198,8 @@ public Server(int portIn, MyData myData) throws IOException {
 					Message msg = xmlParser.xmlStringToMessage(xml);
 					UI.updateMessageArea(msg);
 					handleMessageType(msg);
-				} catch (IOException e) {
+					Thread.sleep(500);
+				} catch (IOException | InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
@@ -218,8 +211,20 @@ public Server(int portIn, MyData myData) throws IOException {
 		private void handleMessageType(Message msg) throws IOException {
 			//Disconnect message
 			if(msg.messageType == MessageType.DISCONNECT){
-				clientsConnected = false;
-//				connectionThread = null;
+				
+				Message msgOut = msg;
+				msgOut.messageType = MessageType.STANDARD;
+				updateOtherUsers(msgOut);
+				
+//				clientUsers.set(userIndex, null);
+				
+				//kill this thread
+				isRunning = false;
+				
+				//check sendToUser why this:
+				socketPool.set(socketPool.indexOf(listenSocket), null);
+
+				
 			}
 			
 			//Key request message
@@ -254,6 +259,22 @@ public Server(int portIn, MyData myData) throws IOException {
 					UI.updateMessageArea(new Message("Reciever did not accepted your file.", "System", Color.BLACK));
 				}
 			}
+			else{
+				updateOtherUsers(msg);
+			}
+		}
+
+
+		private void updateOtherUsers(Message msg) {
+			int senderIndex = socketPool.indexOf(listenSocket); 
+			for (int i = 0; i < clientUsers.size(); i++) {
+				if(i != senderIndex){
+					User receiverUser = clientUsers.get(i);
+					Socket receiverSocket = socketPool.get(i);
+					sendToUser(msg, receiverUser, receiverSocket);
+				}
+			}
+			
 		}
 		
 			

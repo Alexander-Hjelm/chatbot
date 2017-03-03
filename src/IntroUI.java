@@ -178,15 +178,20 @@ public class IntroUI extends JFrame{
 		}
 		
 		MyData myData;
+		Server server;
+		Client client;
+		
 		
 		try {
 			if (serverRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Server", color);
-				chatUI = new ChatUI(new Server(port, myData), myData);
+				server = new Server(port, myData);
+//				chatUI = new ChatUI(new Server(port, myData), myData);
 			}
 			else if (clientRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Client", color);
-				chatUI = new ChatUI(new Client(address, port, myData), myData);
+				client = new Client(address, port, myData);
+//				chatUI = new ChatUI(new Client(address, port, myData), myData);
 			}
 			
 			this.dispose();
