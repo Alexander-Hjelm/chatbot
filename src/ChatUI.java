@@ -289,4 +289,8 @@ public class ChatUI extends JFrame{
 		progressBar.setValue(i);
 	}
 	
+	public void toggleSendFileButton() {
+		sendFileButton.setEnabled(!sendFileButton.isEnabled());
+	}
+	
 }

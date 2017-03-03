@@ -56,6 +56,9 @@ public class FileServer implements Runnable{
 				e1.printStackTrace();
 			}
 
+			//Disable send file button
+			chatUI.toggleSendFileButton();
+			
 	        byte[] bytes = new byte[bufferSize];
 	        int currentBytes = 0;
 	        int count;
@@ -72,6 +75,9 @@ public class FileServer implements Runnable{
 	        } catch (IOException e) {
 				e.printStackTrace();
 			}
+	        
+			//Enable send file button
+			chatUI.toggleSendFileButton();
 	        
 	        try {
 		        fileStreamIn.close();
