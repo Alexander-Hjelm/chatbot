@@ -26,6 +26,13 @@ public class Client extends CommunicationsHandler{
 	private FileClient fileClient;
 	private int bufferSize = 50;
 
+	private boolean listeningForKeyResponse = false;
+	private boolean listeningForFileResponse = false;
+	
+	private long fileRequestSendTime;
+	private long keyRequestSendTime;
+	
+	
 	public Client(String adress, int portIn, MyData myDataIn) throws UnknownHostException, IOException {
 		this.myData = myDataIn;
 		this.destinationPort = portIn;
@@ -41,6 +48,10 @@ public class Client extends CommunicationsHandler{
 	public void sendKeyRequest() {
 		//First thing: send key request message
 		send(new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST));
+		
+		//Enable listening for key response message
+		keyRequestSendTime = System.currentTimeMillis();
+		listeningForKeyResponse = true;
 	}
 	
 	public void connect(String adress, int port) throws UnknownHostException, IOException {
@@ -76,6 +87,14 @@ public class Client extends CommunicationsHandler{
 				e.printStackTrace();
 			}
 			
+			//Evaluate if we should stop listening for incoming response messages
+			if (listeningForFileResponse && fileRequestSendTime + 60000 < System.currentTimeMillis()) {
+				listeningForFileResponse = false;
+			}
+			if (listeningForKeyResponse && keyRequestSendTime + 60000 < System.currentTimeMillis()) {
+				listeningForKeyResponse = false;
+			}
+			
 		}
 	} 
 	
@@ -95,7 +114,7 @@ public class Client extends CommunicationsHandler{
 		}
 		
 		//Key response message
-		else if (msg.messageType == MessageType.KEYRESPONSE) {
+		else if (msg.messageType == MessageType.KEYRESPONSE && listeningForKeyResponse) {
 			//Store sender in Users
 			String adress = (((InetSocketAddress) socket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
 			adress = adress.replace("localhost", "");
@@ -108,7 +127,7 @@ public class Client extends CommunicationsHandler{
 		}
 		
 		//File response message
-		else if (msg.messageType == MessageType.FILERESPONSE) {
+		else if (msg.messageType == MessageType.FILERESPONSE && listeningForFileResponse) {
 			if(msg.fileReply) {
 				UI.updateMessageArea(new Message("Reciever has accepted your file", "System", Color.BLACK));
 				//wait for connection and send file once connection has been established
@@ -174,6 +193,10 @@ public class Client extends CommunicationsHandler{
 			send(fileRequestMessage);
 			// Initialize file server class
 			fileServer = new FileServer(file, UI, bufferSize);
+			
+			//Enable listening for file response message
+			fileRequestSendTime = System.currentTimeMillis();
+			listeningForFileResponse = true;
 		}
 	}
 	

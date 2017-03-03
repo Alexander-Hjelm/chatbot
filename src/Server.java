@@ -30,6 +30,12 @@ public class Server extends CommunicationsHandler {
 	private FileClient fileClient;
 	private int bufferSize = 50;
 
+	private boolean listeningForKeyResponse = false;
+	private boolean listeningForFileResponse = false;
+	
+	private long fileRequestSendTime;
+	private long keyRequestSendTime;
+
 public Server(int portIn, MyData myDataIn) throws IOException {
 	port = portIn;
 	this.myData = myDataIn;
@@ -48,6 +54,10 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 		//First thing: send key request message
 		Message requestMsg = new Message("{Key Request}", myData.userName, myData.color, MessageType.KEYREQUEST);
 		sendToUser(requestMsg, user, s);
+		
+		//Enable listening for key response message
+		keyRequestSendTime = System.currentTimeMillis();
+		listeningForKeyResponse = true;
 	}
 	
 	public void stopServer() throws IOException {
@@ -83,6 +93,14 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
+				}
+				
+				//Evaluate if we should stop listening for incoming response messages
+				if (listeningForFileResponse && fileRequestSendTime + 60000 < System.currentTimeMillis()) {
+					listeningForFileResponse = false;
+				}
+				if (listeningForKeyResponse && keyRequestSendTime + 60000 < System.currentTimeMillis()) {
+					listeningForKeyResponse = false;
 				}
 				
 				// kill thread to make it behave as before. remove this later.
@@ -157,6 +175,10 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			send(fileRequestMessage);
 			// Initialize file server class
 			fileServer = new FileServer(file, UI, bufferSize);
+			
+			//Enable listening for file response message
+			fileRequestSendTime = System.currentTimeMillis();
+			listeningForFileResponse = true;
 		}
 	}
 	
@@ -236,7 +258,7 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			}
 			
 			//Key response message
-			else if (msg.messageType == MessageType.KEYRESPONSE) {
+			else if (msg.messageType == MessageType.KEYRESPONSE && listeningForKeyResponse) {
 				//Store sender in Users
 				String adress = (((InetSocketAddress) listenSocket.getRemoteSocketAddress()).getAddress()).toString().replace("/","");
 				adress = adress.replace("localhost", "");
@@ -250,7 +272,7 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			}
 			
 			//File response message
-			else if (msg.messageType == MessageType.FILERESPONSE) {
+			else if (msg.messageType == MessageType.FILERESPONSE && listeningForFileResponse) {
 				if(msg.fileReply) {
 					UI.updateMessageArea(new Message("Reciever has accepted your file.", "System", Color.BLACK));
 					//wait for connection and send file once connection has been established
