@@ -49,22 +49,24 @@ public class FileServer implements Runnable{
 			}
 			
 			try {
+				
 				fileStreamIn = new FileInputStream(file);
+				
 			} catch (FileNotFoundException e1) {
 				e1.printStackTrace();
 			}
 
-	        byte[] bytes = new byte[(int) file.length()];
-
+	        byte[] bytes = new byte[bufferSize];
+	        int currentBytes = 0;
 	        int count;
-	        int maxCount = 0;
 	        try {
 				while ((count = fileStreamIn.read(bytes)) > 0) {
 					streamOut.write(bytes, 0, count);
 					
 					//Fill progress bar on ChatUI
-					maxCount = Math.max(maxCount, count);
-					int progressBarFill = (maxCount - count)/maxCount;
+					currentBytes += bufferSize;
+					double frac = (double) currentBytes/ (double) file.length();
+					int progressBarFill = (int) (frac * 100);
 					chatUI.setProgressBarFill(progressBarFill);
 				}
 	        } catch (IOException e) {
