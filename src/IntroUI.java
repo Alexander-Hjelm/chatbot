@@ -123,7 +123,12 @@ public class IntroUI extends JFrame{
 		
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 System.exit(0);
+	 			dispose();
+				
+				// if no windows are currently up, exit normally
+				if (Frame.getFrames().length == 0) {
+					System.exit(0);
+				}
 	         }
 	      });
 
