@@ -38,13 +38,13 @@ public class Server extends CommunicationsHandler {
 	private long fileRequestSendTime;
 	private long keyRequestSendTime;
 
-public Server(int portIn, MyData myDataIn) throws IOException {
-	port = portIn;
-	this.myData = myDataIn;
-	this.UI = new ChatUI(this, myData);
-	startServer();
-	
-} 	
+	public Server(int portIn, MyData myDataIn) throws IOException {
+		port = portIn;
+		this.myData = myDataIn;
+		this.UI = new ChatUI(this, myData);
+		startServer();
+		
+	} 	
 	
 	public void startServer() throws IOException {
 		
@@ -104,9 +104,6 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 				if (listeningForKeyResponse && keyRequestSendTime + 60000 < System.currentTimeMillis()) {
 					listeningForKeyResponse = false;
 				}
-				
-				// kill thread to make it behave as before. remove this later.
-//				connectionThread = null;
 	
 			
 		}
@@ -177,13 +174,14 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 		
 	}
 	
-	@Override
-	public void sendFileRequest(File file, String additionalText) {
+	public void sendFileRequest(File file, String additionalText, User destinationUser) {
 		if (file.exists()) {
+			int userIndex = clientUsers.indexOf(destinationUser);
+			fileServer = new FileServer(file, UI, bufferSize, destinationUser);
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
-			send(fileRequestMessage);
+			sendToUser(fileRequestMessage, destinationUser, socketPool.get(userIndex));
 			// Initialize file server class
-			fileServer = new FileServer(file, UI, bufferSize);
+
 			
 			//Enable listening for file response message
 			fileRequestSendTime = System.currentTimeMillis();
@@ -192,16 +190,19 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 	}
 	
 	@Override
-	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize) {
+	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize, int userIndex) {
 		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
-		send(fileResponseMessage);
+		sendToUser(fileResponseMessage, clientUsers.get(userIndex), socketPool.get(userIndex));
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
 			//made this ugly with clientusers.get(0).address. needs fixing
-			fileClient = new FileClient(clientUsers.get(0).adress, port, fileName, fileSize, UI, bufferSize);	//Change single client user for later
+			fileClient = new FileClient(clientUsers.get(userIndex).adress, port, fileName, fileSize, UI, bufferSize);	//Change single client user for later
 		}
 	}
 	
+	public ArrayList<User> getClientUsers() {
+		return clientUsers;
+	}
 	
 	private class MessageListener implements Runnable{
 		private Socket listenSocket;
@@ -276,7 +277,8 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			
 			//File request message
 			else if (msg.messageType == MessageType.FILEREQUEST) {
-				UI.showFileReceiverUI(msg.fileName, msg.fileSize);
+				int userIndex = socketPool.indexOf(listenSocket);
+				UI.showFileReceiverUI(msg.fileName, msg.fileSize, userIndex);
 			}
 			
 			//File response message
@@ -307,7 +309,7 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 			
 		}
 		
-			
+
 		
 		
 	}

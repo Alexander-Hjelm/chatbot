@@ -124,7 +124,9 @@ public class Client extends CommunicationsHandler{
 		
 		//File request message
 		else if (msg.messageType == MessageType.FILEREQUEST) {
-			UI.showFileReceiverUI(msg.fileName, msg.fileSize);
+			//serverUser is always known for client and it can be accessed with ease later on, so no need to get it now. See sendFileResponse(..)
+			int destinationIndex = 0;
+			UI.showFileReceiverUI(msg.fileName, msg.fileSize, destinationIndex);
 		}
 		
 		//File response message
@@ -193,13 +195,13 @@ public class Client extends CommunicationsHandler{
 		
 	}
 
-	@Override
-	public void sendFileRequest(File file, String text) {
+	public void sendFileRequest(File file, String text, User destinationUser) {
 		if (file.exists()) {
+			// Never use destinationUser
 			Message fileRequestMessage = new Message(text, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file, UI, bufferSize);
+			fileServer = new FileServer(file, UI, bufferSize, serverUser);
 			
 			//Enable listening for file response message
 			fileRequestSendTime = System.currentTimeMillis();
@@ -208,7 +210,7 @@ public class Client extends CommunicationsHandler{
 	}
 	
 	@Override
-	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize) {
+	public void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize, int destinationUserIndex) {
 		Message fileResponseMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILERESPONSE, reply, port);
 		send(fileResponseMessage);
 		// If yes, Initialize file client class, recieve file at once

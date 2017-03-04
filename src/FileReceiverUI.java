@@ -30,12 +30,14 @@ public class FileReceiverUI extends JFrame {
 	private JTextField optionalMessageTextField;
 	private String fileName;
 	private long fileSize;
+	private int destinationUserIndex;
 	
-	public FileReceiverUI(CommunicationsHandler communicationsHandlerIn, String fileName, long fileSize) {
+	public FileReceiverUI(CommunicationsHandler communicationsHandlerIn, String fileName, long fileSize, int userIndex) {
 		super("Accept incoming file?");
 		this.communicationsHandler = communicationsHandlerIn;
 		this.fileName = fileName;
 		this.fileSize = fileSize;
+		this.destinationUserIndex = userIndex;
 		panel = new JPanel();
 		
 		buttonAction();
@@ -81,7 +83,7 @@ public class FileReceiverUI extends JFrame {
             public void windowClosing(WindowEvent e)
             {
             	int port = Integer.parseInt(portTextField.getText());
-            	communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), "", 0);
+            	communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), "", 0, destinationUserIndex);
    	        	dispose();
 
             }
@@ -104,7 +106,7 @@ public class FileReceiverUI extends JFrame {
 		yesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
         	int port = Integer.parseInt(portTextField.getText());
-        		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText(), fileName, fileSize);
+        		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText(), fileName, fileSize, destinationUserIndex);
 	           	dispose();
 	         }
 	      });
@@ -112,7 +114,7 @@ public class FileReceiverUI extends JFrame {
 		noButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
             	 int port = Integer.parseInt(portTextField.getText());
-	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), fileName, fileSize);
+	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), fileName, fileSize, destinationUserIndex);
 	        	 dispose();
 	         }
 	      });

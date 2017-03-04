@@ -10,6 +10,7 @@ public class Program{
 	
 	public static void main(String[] args) throws UnknownHostException, IOException {
 	
+		System.setProperty("sun.net.useExclusiveBind", "false");	// Allows one to reuse ports once the original socket has been closed
 		IntroUI introUI = new IntroUI();
 		
 	}

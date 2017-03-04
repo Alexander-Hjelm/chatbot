@@ -125,9 +125,14 @@ public class ChatUI extends JFrame{
 
 	             if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            	 File file = fileChooser.getSelectedFile();
-	                 communicationsHandler.sendFileRequest(file, myMessagePane.getText());
-	                 
-
+	            	 
+	            	 if (communicationsHandler instanceof Server) {
+	            		 FileUserSelectorUI fileUI = new FileUserSelectorUI(file, myMessagePane.getText(), communicationsHandler);
+	            	 } else {
+	            		// This is a client, send file request to server.
+		                 communicationsHandler.sendFileRequest(file, myMessagePane.getText(), null);
+	            	 }
+	            	 
 	                 
 //	         		 Check for xml errors,  \o/
 //	                 XmlParser xmlParser = new XmlParser(myData);
@@ -262,8 +267,8 @@ public class ChatUI extends JFrame{
 		
 	}
 	
-	public void showFileReceiverUI(String fileName, long fileSize) {
-		fileReceiverUI = new FileReceiverUI(communicationsHandler, fileName, fileSize);
+	public void showFileReceiverUI(String fileName, long fileSize, int userIndex) {
+		fileReceiverUI = new FileReceiverUI(communicationsHandler, fileName, fileSize, userIndex);
 	}
 	
 	private void sendMessage() {

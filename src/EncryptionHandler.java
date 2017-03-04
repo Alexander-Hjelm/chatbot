@@ -26,16 +26,16 @@ public class EncryptionHandler {
 		
 	}
 	
-	public String encrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	public String encrypt(byte[] byteInput) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		if(aes){
-			return aesEncrypt(inputString);
+			return aesEncrypt(byteInput);
 		}
 		else{
-			return caesarEncrypt(inputString);
+			return caesarEncrypt(byteInput);
 		}
 	}
 	
-	public String decrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	public byte[] decrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		if(aes){
 			return aesDecrypt(inputString);
 		}
@@ -46,26 +46,26 @@ public class EncryptionHandler {
 
 	//ciphers
 	//caesar/shift-cipher:
-	private String caesarEncrypt(String inputString) {
+	private String caesarEncrypt(byte[] byteInput) {
 	
 		int key = Integer.parseInt(thisKey);
 		
-		byte[] b = inputString.getBytes(StandardCharsets.UTF_8);	
+//		byte[] b = inputString.getBytes(StandardCharsets.UTF_8);	
 		
-		for (int i = 0; i < b.length; i++) {
+		for (int i = 0; i < byteInput.length; i++) {
 			
 
-			int current = b[i] & 0xff;
+			int current = byteInput[i] & 0xff;
 			int shifted = ((current + key) % byteRange);
-			b[i] = (byte) shifted;
+			byteInput[i] = (byte) shifted;
 		}
 		
-		String encryptedHexString = DatatypeConverter.printHexBinary(b);
+		String encryptedHexString = DatatypeConverter.printHexBinary(byteInput);
 		
 		return(encryptedHexString);
 	}
 	
-	private String caesarDecrypt(String encryptedHexString) {
+	private byte[] caesarDecrypt(String encryptedHexString) {
 		
 		int key = Integer.parseInt(thisKey);
 		
@@ -82,8 +82,8 @@ public class EncryptionHandler {
 			b[i] = (byte) shifted;
 		}
 		
-		String outputString = new String(b, StandardCharsets.UTF_8);	
-		return(outputString);
+//		String outputString = new String(b, StandardCharsets.UTF_8);	
+		return b;
 	}
 	
 	
@@ -98,15 +98,15 @@ public class EncryptionHandler {
 	}
 	
 	
-	private String aesEncrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	private String aesEncrypt(byte[] byteInput) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		SecretKey secKey = aesStringToKey(thisKey);
         
-        byte[] b = inputString.getBytes(StandardCharsets.UTF_8);
+//        byte[] b = inputString.getBytes(StandardCharsets.UTF_8);
         
         // encrypt the bytes of inputstring
         Cipher aesCipher = Cipher.getInstance("AES");
         aesCipher.init(Cipher.ENCRYPT_MODE, secKey);
-        byte[] bytesEncrypted = aesCipher.doFinal(b);
+        byte[] bytesEncrypted = aesCipher.doFinal(byteInput);
         
         //make to hex-string
         String encryptedHexString = DatatypeConverter.printHexBinary(bytesEncrypted);
@@ -116,7 +116,7 @@ public class EncryptionHandler {
 	
 	
 	
-	private String aesDecrypt(String encryptedHexString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+	private byte[] aesDecrypt(String encryptedHexString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		SecretKey secKey = aesStringToKey(thisKey);
 		
 		//hex to bytes
@@ -131,8 +131,8 @@ public class EncryptionHandler {
 		
 		
 		//interpret bytes. gg
-		String plainText = new String(bytesDecrypted, StandardCharsets.UTF_8);
-		return plainText;
+//		String plainText = new String(bytesDecrypted, StandardCharsets.UTF_8);
+		return bytesDecrypted;
 	}
 		
 }

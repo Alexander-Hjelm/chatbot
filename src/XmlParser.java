@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.StringWriter;
+import java.nio.charset.StandardCharsets;
 import java.security.InvalidKeyException;
 import java.security.NoSuchAlgorithmException;
 
@@ -131,6 +132,7 @@ public class XmlParser {
 		
 		
 //		decrypt
+		// the contents of the children are encrypted hex-strings. decrypt gives us decrypted bytes, make those bytes to string and make it the new content.
 		if((messageType != MessageType.KEYRESPONSE) && (messageType != MessageType.KEYREQUEST)){
 			encryptionHandler = new EncryptionHandler(myData.key, myData.aes);
 			Element encrypted = (Element) xmlDoc.getElementsByTagName("encrypted").item(0);
@@ -142,13 +144,15 @@ public class XmlParser {
 				
 				String plainText = "";
 				try {
-					plainText = encryptionHandler.decrypt(stringToBeDecrypted);
+					//decrypted bytes to string
+					plainText = new String(encryptionHandler.decrypt(stringToBeDecrypted), StandardCharsets.UTF_8);
 				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
 						| NoSuchPaddingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-
+				
+				//set content
 				encryptedChildren.item(i).setTextContent(plainText);
 				
 			}
@@ -285,24 +289,27 @@ public class XmlParser {
 		}
 		
 		//encrypt
+		//get the childs of the encrypt-tag, which is only text at the moment. make their textcontent to bytes, read utf8.
+		//encrypt gets us a hexstring which is now the textcontent of the encrypted childs. 
+		
 		if((message.messageType != MessageType.KEYRESPONSE) && (message.messageType != MessageType.KEYREQUEST)){
 			encryptionHandler = new EncryptionHandler(user.key, user.aes);
 			NodeList encryptedChilds = encryptedElem.getChildNodes();
 			for (int i = 0; i < encryptedChilds.getLength(); i++) {
 				
 				
-				String stringToBeEncrypted = encryptedChilds.item(i).getTextContent();
+				byte[] bytesToBeEncrypted = encryptedChilds.item(i).getTextContent().getBytes(StandardCharsets.UTF_8);
 				
-				String plainText = "";
+				String hexString = "";
 				try {
-					plainText = encryptionHandler.encrypt(stringToBeEncrypted);
+					hexString = encryptionHandler.encrypt(bytesToBeEncrypted);
 				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
 						| NoSuchPaddingException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
-				encryptedChilds.item(i).setTextContent(plainText);
+				encryptedChilds.item(i).setTextContent(hexString);
 				
 			}
 		}
