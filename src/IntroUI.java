@@ -1,12 +1,15 @@
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 
+import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
@@ -53,20 +56,42 @@ public class IntroUI extends JFrame{
 	public IntroUI() {
 		super("Intro Window");
 		
-		GridLayout gridLayout = new GridLayout(0, 2);
+		panel = new JPanel();
 
-		panel = new JPanel(gridLayout);
+		panel.setLayout(new GridBagLayout());
+		GridBagConstraints c = new GridBagConstraints(); 
+
+	    FlowLayout titleLayout = new FlowLayout();
+	    titleLayout.setAlignment(FlowLayout.CENTER);
+	    JPanel titlePanel = new JPanel(titleLayout);
+	    titlePanel.add(titleLabel);	    
 		
-		//Empty layout
-		JPanel emptyPanel = new JPanel(new FlowLayout(FlowLayout.LEADING));
-		
-		JPanel titlePanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-		titlePanel.add(titleLabel);
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 0;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(titlePanel,c);
 		
 		clientServerButtonGroup = new ButtonGroup();
 		clientServerButtonGroup.add(clientRadioButton);
 		clientServerButtonGroup.add(serverRadioButton);
 		clientRadioButton.setSelected(true);
+		
+		GridLayout clientServerButtonLayout = new GridLayout(0, 5);
+        JPanel clientServerPanel = new JPanel(clientServerButtonLayout);
+        clientServerPanel.setBorder(BorderFactory.createTitledBorder("Run as client or server?"));
+        
+        clientServerPanel.add(clientRadioButton);
+        clientServerPanel.add(radioButtonClientLabel);
+        clientServerPanel.add(new JLabel("           "));	//Whitespace
+        clientServerPanel.add(serverRadioButton);
+		clientServerPanel.add(radioButtonServerLabel);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 1;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(clientServerPanel,c);
 		
 		cryptoButtonGroup = new ButtonGroup();
 		cryptoButtonGroup.add(aesRadioButton);
@@ -75,16 +100,18 @@ public class IntroUI extends JFrame{
 		
 		GridLayout cryptoButtonLayout = new GridLayout(0, 2);
 		JPanel cryptoButtonPanel = new JPanel(cryptoButtonLayout);
+		cryptoButtonPanel.setBorder(BorderFactory.createTitledBorder("Crypto:"));
 		
 		cryptoButtonPanel.add(aesRadioButton);
 		cryptoButtonPanel.add(radioButtonAesLabel);
 		cryptoButtonPanel.add(caesarRadioButton);
 		cryptoButtonPanel.add(radioButtonCaesarLabel);
 		
-		GridLayout jButtonLayout = new GridLayout(0, 1);
-		JPanel jButtonPanel = new JPanel(jButtonLayout);
-		jButtonPanel.add(connectButton);
-		jButtonPanel.add(exitButton);
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 2;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(cryptoButtonPanel,c);
 
 		connectButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
@@ -96,33 +123,57 @@ public class IntroUI extends JFrame{
 		
 		exitButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-	        	 dispose();
+	        	 System.exit(0);
 	         }
 	      });
-		
-		panel.add(titlePanel);
-		panel.add(emptyPanel);
-		
-		panel.add(nameLabel);
-		panel.add(namePane);
-		
-		panel.add(clientRadioButton);
-		panel.add(radioButtonClientLabel);
-		panel.add(serverRadioButton);
-		panel.add(radioButtonServerLabel);
 
-		panel.add(adressLabel);
-		panel.add(adressPane);
+		GridLayout namePanesLayout = new GridLayout(2, 2);
+		JPanel namePanesPanel = new JPanel(namePanesLayout);
+		namePanesPanel.setBorder(BorderFactory.createTitledBorder(""));
 		
-		panel.add(portLabel);
-		panel.add(portPane);
+		namePanesPanel.add(nameLabel);
+		namePanesPanel.add(namePane);
 		
-		panel.add(cryptoButtonPanel);
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 3;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(namePanesPanel,c);
 		
-		panel.add(colorChooser);
-		colorChooser.setColor(Color.BLACK);
+		GridLayout inputPanesLayout = new GridLayout(2, 2);
+		JPanel inputPanesPanel = new JPanel(inputPanesLayout);
+		inputPanesPanel.setBorder(BorderFactory.createTitledBorder("Connection details:"));
 		
-		panel.add(jButtonPanel);
+		inputPanesPanel.add(adressLabel);
+		inputPanesPanel.add(adressPane);
+		inputPanesPanel.add(portLabel);
+		inputPanesPanel.add(portPane);
+
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 4;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(inputPanesPanel,c);
+		
+        colorChooser.setColor(Color.BLACK);
+        
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 5;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(colorChooser,c);	
+		
+		GridLayout jButtonLayout = new GridLayout(1, 0);
+		JPanel jButtonPanel = new JPanel(jButtonLayout);
+		jButtonPanel.add(connectButton);
+		jButtonPanel.add(exitButton);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 6;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(jButtonPanel,c);
+
 		
 		createAndShowGUI(panel);
 	}
