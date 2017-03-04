@@ -196,7 +196,7 @@ public class Server extends CommunicationsHandler {
 		// If yes, Initialize file client class, recieve file at once
 		if (reply) {
 			//made this ugly with clientusers.get(0).address. needs fixing
-			fileClient = new FileClient(clientUsers.get(userIndex).adress, port, fileName, fileSize, UI, bufferSize);	//Change single client user for later
+			fileClient = new FileClient(clientUsers.get(userIndex).adress, port, fileName, fileSize, UI, bufferSize, myData);	//Change single client user for later
 		}
 	}
 	

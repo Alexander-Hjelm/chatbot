@@ -7,6 +7,12 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class FileClient implements Runnable{
 
@@ -18,12 +24,14 @@ public class FileClient implements Runnable{
 	private long fileSize;
 	private ChatUI chatUI;
 	private int bufferSize;
+	private MyData myData;
 	
-	public FileClient(String addr, int port, String fileName, long fileSize, ChatUI chatUI, int bufferSize) {
+	public FileClient(String addr, int port, String fileName, long fileSize, ChatUI chatUI, int bufferSize, MyData myDataIn) {
 		this.fileName = fileName;
 		this.fileSize = fileSize;
 		this.chatUI = chatUI;
 		this.bufferSize = bufferSize;
+		this.myData = myDataIn;
 		
 		try {
 			socket = new Socket(addr, port);
@@ -48,12 +56,13 @@ public class FileClient implements Runnable{
 			try {
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				
+				
 			} catch (IOException e1) {
 				e1.printStackTrace();
 			}
 			
 			File file = new File(fileName);
-
+			EncryptionHandler encryptionHandler = new EncryptionHandler(myData.key, myData.aes);
             try {
 				fileStreamOut = new FileOutputStream(file);
 				
@@ -66,10 +75,18 @@ public class FileClient implements Runnable{
 
 	        byte[] bytes = new byte[bufferSize];
 	        int currentBytes = 0;
-	        int count;
+	        String encryptedHex;
 	        try {
-				while ((count = streamIn.read(bytes)) > 0) {
-					fileStreamOut.write(bytes, 0, count);
+				while ((currentBytes) < fileSize) {
+					encryptedHex = streamIn.readUTF();
+					try {
+						bytes = encryptionHandler.decrypt(encryptedHex);
+					} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
+							| NoSuchAlgorithmException | NoSuchPaddingException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					fileStreamOut.write(bytes);
 					
 					//Fill progress bar on ChatUI
 					currentBytes += bufferSize;
