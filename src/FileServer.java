@@ -1,11 +1,20 @@
 import java.io.BufferedOutputStream;
+import java.io.ByteArrayInputStream;
 import java.io.DataOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.NoSuchAlgorithmException;
+
+import javax.crypto.BadPaddingException;
+import javax.crypto.IllegalBlockSizeException;
+import javax.crypto.NoSuchPaddingException;
 
 public class FileServer implements Runnable{
 
@@ -17,11 +26,13 @@ public class FileServer implements Runnable{
 	private Thread t;
 	private ChatUI chatUI;
 	private int bufferSize;
+	private User destinationUser;
 	
-	public FileServer(File file, ChatUI chatUI, int bufferSize) {
+	public FileServer(File file, ChatUI chatUI, int bufferSize, User destinationUser) {
 		this.file = file;
 		this.chatUI = chatUI;
 		this.bufferSize = bufferSize;
+		this.destinationUser = destinationUser;
 	}
 
 	public void startServer(int port) {
@@ -59,11 +70,36 @@ public class FileServer implements Runnable{
 			//Disable send file button
 			chatUI.toggleSendFileButton();
 			
+			//Encrypt file
+			EncryptionHandler encryptionHandler = new EncryptionHandler(destinationUser.key, destinationUser.aes);
+			
+			StringBuilder fileStringBuilder = new StringBuilder();
+			int ch;
+			try {
+				while((ch = fileStreamIn.read()) != -1){
+					fileStringBuilder.append((char)ch);
+				}
+			} catch (IOException e1) {
+				e1.printStackTrace();
+			}
+			
+			String fileString = fileStringBuilder.toString();
+			String outStr = "";
+			try {
+				outStr = encryptionHandler.encrypt(fileString);
+			} catch (InvalidKeyException | IllegalBlockSizeException
+					| BadPaddingException | NoSuchAlgorithmException
+					| NoSuchPaddingException e1) {
+				e1.printStackTrace();
+			}
+			//outStr is now the encrypted file string
+
+			InputStream stream = new ByteArrayInputStream(outStr.getBytes(StandardCharsets.UTF_8));
 	        byte[] bytes = new byte[bufferSize];
 	        int currentBytes = 0;
 	        int count;
 	        try {
-				while ((count = fileStreamIn.read(bytes)) > 0) {
+				while ((count = stream.read(bytes)) > 0) {
 					streamOut.write(bytes, 0, count);
 					
 					//Fill progress bar on ChatUI

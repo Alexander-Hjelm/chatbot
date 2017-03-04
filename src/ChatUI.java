@@ -125,9 +125,14 @@ public class ChatUI extends JFrame{
 
 	             if (returnVal == JFileChooser.APPROVE_OPTION) {
 	            	 File file = fileChooser.getSelectedFile();
-	                 communicationsHandler.sendFileRequest(file, myMessagePane.getText());
-	                 
-
+	            	 
+	            	 if (communicationsHandler instanceof Server) {
+	            		 // TODO: show dialogue and send file to specified user
+	            	 } else {
+	            		// This is a client, send file request to server.
+		                 communicationsHandler.sendFileRequest(file, myMessagePane.getText(), null);
+	            	 }
+	            	 
 	                 
 //	         		 Check for xml errors,  \o/
 //	                 XmlParser xmlParser = new XmlParser(myData);

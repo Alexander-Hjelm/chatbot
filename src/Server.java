@@ -177,13 +177,12 @@ public Server(int portIn, MyData myDataIn) throws IOException {
 		
 	}
 	
-	@Override
-	public void sendFileRequest(File file, String additionalText) {
+	public void sendFileRequest(File file, String additionalText, User destinationUser) {
 		if (file.exists()) {
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file, UI, bufferSize);
+			fileServer = new FileServer(file, UI, bufferSize, destinationUser);
 			
 			//Enable listening for file response message
 			fileRequestSendTime = System.currentTimeMillis();

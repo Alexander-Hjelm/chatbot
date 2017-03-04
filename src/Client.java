@@ -193,13 +193,13 @@ public class Client extends CommunicationsHandler{
 		
 	}
 
-	@Override
-	public void sendFileRequest(File file, String text) {
+	public void sendFileRequest(File file, String text, User destinationUser) {
 		if (file.exists()) {
+			// Never use destinationUser
 			Message fileRequestMessage = new Message(text, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			send(fileRequestMessage);
 			// Initialize file server class
-			fileServer = new FileServer(file, UI, bufferSize);
+			fileServer = new FileServer(file, UI, bufferSize, serverUser);
 			
 			//Enable listening for file response message
 			fileRequestSendTime = System.currentTimeMillis();
