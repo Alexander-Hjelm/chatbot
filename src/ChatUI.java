@@ -128,6 +128,7 @@ public class ChatUI extends JFrame{
 	            	 
 	            	 if (communicationsHandler instanceof Server) {
 	            		 FileUserSelectorUI fileUI = new FileUserSelectorUI(file, myMessagePane.getText(), communicationsHandler);
+
 	            	 } else {
 	            		// This is a client, send file request to server.
 		                 communicationsHandler.sendFileRequest(file, myMessagePane.getText(), null);

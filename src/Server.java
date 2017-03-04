@@ -181,7 +181,7 @@ public class Server extends CommunicationsHandler {
 			Message fileRequestMessage = new Message(additionalText, myData.userName, myData.color, MessageType.FILEREQUEST, file.getName(), file.length());
 			sendToUser(fileRequestMessage, destinationUser, socketPool.get(userIndex));
 			// Initialize file server class
-
+			fileServer = new FileServer(file, UI, bufferSize, destinationUser);
 			
 			//Enable listening for file response message
 			fileRequestSendTime = System.currentTimeMillis();
