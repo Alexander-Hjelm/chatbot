@@ -262,7 +262,7 @@ public class ChatUI extends JFrame{
 		this.add(panel);
 	
 	    //Display the window.
-		this.pack();
+		this.setSize(300, 300);
 		this.setVisible(true);
 		
 		
