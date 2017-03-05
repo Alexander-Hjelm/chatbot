@@ -9,6 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import javax.crypto.BadPaddingException;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.xml.bind.DatatypeConverter;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -76,7 +77,11 @@ public class XmlParser {
 		if(!(connectionNode == null)){
 			isKeyResponseType = true;
 			Element keyElem = (Element) xmlDoc.getElementsByTagName("keyresponse").item(0);
-			key = keyElem.getAttribute("key");//Extract key from the attribute of keyresponse
+			
+			//key is sent as an hex-string. parse hex to bytes.
+			byte[] byteKey = DatatypeConverter.parseHexBinary(keyElem.getAttribute("key"));
+			//make those bytes to a string again. 
+			key = new String(byteKey, StandardCharsets.UTF_8);//Extract key from the attribute of keyresponse
 			
 			//set encryption method
 			if(keyElem.getAttribute("type").equals("aes")) {
@@ -258,7 +263,8 @@ public class XmlParser {
 				type = "caesar";
 			}
 			Element keyElem = xmlDoc.createElement("keyresponse");
-			keyElem.setAttribute("key", myData.key);
+			String keyString = DatatypeConverter.printHexBinary(myData.key.getBytes(StandardCharsets.UTF_8));
+			keyElem.setAttribute("key", keyString);
 			keyElem.setAttribute("type", type);
 			keyElem.setTextContent(message.text);
 
