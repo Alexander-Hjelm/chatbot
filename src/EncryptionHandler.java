@@ -15,7 +15,6 @@ public class EncryptionHandler {
 	private String thisKey;
 	private int byteRange = 256;
 	private boolean aes;
-	private String receiverKey;
 	
 	public EncryptionHandler(String keyIn, boolean aesIn){
 		
