@@ -11,7 +11,8 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 public class FileReceiverUI extends JFrame {
-
+	//The UI that shows once a file request message arrives
+	
 	private CommunicationsHandler communicationsHandler;
 	
 	private JPanel panel;
@@ -97,7 +98,8 @@ public class FileReceiverUI extends JFrame {
 
 		yesButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-        	int port = Integer.parseInt(portTextField.getText());
+				//Send positive file response
+				int port = Integer.parseInt(portTextField.getText());
         		communicationsHandler.sendFileResponse(true, port, optionalMessageTextField.getText(), fileName, fileSize, destinationUserIndex);
 	           	dispose();
 	         }
@@ -105,7 +107,8 @@ public class FileReceiverUI extends JFrame {
 		
 		noButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
-            	 int port = Integer.parseInt(portTextField.getText());
+	        	//Send negative file response
+	        	 int port = Integer.parseInt(portTextField.getText());
 	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), fileName, fileSize, destinationUserIndex);
 	        	 dispose();
 	         }

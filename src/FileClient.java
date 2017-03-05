@@ -14,7 +14,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class FileClient implements Runnable{
-
+	//Accepts incoming files over a separate thread and socket
+	
 	private Socket socket;
 	private DataInputStream streamIn;
 	private FileOutputStream fileStreamOut;
@@ -51,7 +52,7 @@ public class FileClient implements Runnable{
 	public void run() {
 
 		while (t != null) {
-
+			//Instantiate streams
 			try {
 				streamIn = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 				
@@ -77,6 +78,7 @@ public class FileClient implements Runnable{
 	        String encryptedHex;
 	        try {
 				while ((currentBytes) < fileSize) {
+					//decrypt file
 					encryptedHex = streamIn.readUTF();
 					try {
 						bytes = encryptionHandler.decrypt(encryptedHex);
@@ -84,6 +86,8 @@ public class FileClient implements Runnable{
 							| NoSuchAlgorithmException | NoSuchPaddingException e) {
 						e.printStackTrace();
 					}
+					
+					//Write to file
 					fileStreamOut.write(bytes);
 					
 					//Fill progress bar on ChatUI
@@ -108,6 +112,7 @@ public class FileClient implements Runnable{
 			}
 	        
 	        if (socket.isClosed()) {
+	        	//Stop thread
 	        	return;
 	        }
 		}

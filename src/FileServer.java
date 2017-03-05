@@ -14,7 +14,8 @@ import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
 
 public class FileServer implements Runnable{
-
+	//Sends files over a separate thread and socket
+	
 	private File file;
 	private ServerSocket server;
 	private Socket socket;
@@ -49,7 +50,7 @@ public class FileServer implements Runnable{
 	
 	@Override
 	public void run() {
-
+			//Instantiate streams
 			try {
 				streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			} catch (IOException e1) {
@@ -77,12 +78,16 @@ public class FileServer implements Runnable{
 				while (fileStreamIn.read(bytes) != -1){
 					String encryptedHex = "";
 					try {
+						//Bytes to hex
 						encryptedHex = encryptionHandler.encrypt(bytes);
+						//Write bytes to socket
 						streamOut.writeUTF(encryptedHex);
 					} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
 							| NoSuchAlgorithmException | NoSuchPaddingException | IOException e1) {
 						e1.printStackTrace();
 					}
+					
+					//Update progressbar on chatUI
 					currentBytes += bufferSize;
 					double frac = (double) currentBytes / (double) file.length();
 					int progressBarFill = (int) (frac * 100);
@@ -106,6 +111,7 @@ public class FileServer implements Runnable{
 			}
 	        
 	        if (server.isClosed()) {
+	        	//Stop thread
 	        	return;
 	        }
 		}

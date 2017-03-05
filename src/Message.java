@@ -21,7 +21,7 @@ public class Message {
 	}
 	
 	public Message(String text, String sender, Color color, MessageType messageType) {
-		//Standard
+		//Standard messsage
 		this.text = text;
 		this.sender = sender;
 		this.color = color;

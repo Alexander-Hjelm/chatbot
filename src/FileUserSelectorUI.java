@@ -75,6 +75,7 @@ public class FileUserSelectorUI extends JFrame{
             count++;
         }
 		
+		//Send file request
 		user = ((Server) communicationsHandler).getClientUsers().get(index);
 		communicationsHandler.sendFileRequest(file, messageText, user);
 	}

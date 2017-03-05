@@ -120,6 +120,7 @@ public class Server extends CommunicationsHandler {
 	
 	private void sendToUser(Message msg, User user, Socket s){
 		try {
+			//Build xml-string and encrypt
 			XmlParser xmlParser = new XmlParser(myData);
 			if (user != null) {
 				xmlParser.setUser(user);
@@ -290,6 +291,7 @@ public class Server extends CommunicationsHandler {
 
 
 		private void updateOtherUsers(Message msg) {
+			//Send message to all clients other than the sender of the last message
 			int senderIndex = socketPool.indexOf(listenSocket); 
 			for (int i = 0; i < clientUsers.size(); i++) {
 				if(i != senderIndex){

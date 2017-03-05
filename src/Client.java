@@ -143,12 +143,14 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void send(Message msg) {
 		try {
+			//Build xml-string and encrypt
 			XmlParser xmlParser = new XmlParser(myData);
 			if(serverUser != null){
 				xmlParser.setUser(serverUser);
 			}
 			String xml = xmlParser.MessageToXmlString(msg);
 
+			//Write xml-string to socket
 			streamOut = new DataOutputStream(new BufferedOutputStream(socket.getOutputStream()));
 			streamOut.writeUTF(xml);
 			streamOut.flush();
@@ -164,6 +166,7 @@ public class Client extends CommunicationsHandler{
 		
 		//if connected to server.
 		if(serverUp) {
+			//Send disconnect message
 			Message exitMsg = new Message("has logged off.", myData.userName, myData.color, MessageType.DISCONNECT);
 			send(exitMsg);
 		}
@@ -174,7 +177,6 @@ public class Client extends CommunicationsHandler{
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		//bye
 		socket.close();
 		UI.dispose();
 		

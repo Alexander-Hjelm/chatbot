@@ -24,6 +24,7 @@ public class EncryptionHandler {
 	}
 	
 	public String encrypt(byte[] byteInput) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		//Evaluate cipher and encrypt
 		if(aes){
 			return aesEncrypt(byteInput);
 		}
@@ -33,6 +34,7 @@ public class EncryptionHandler {
 	}
 	
 	public byte[] decrypt(String inputString) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
+		//Evaluate cipher and decrypt
 		if(aes){
 			return aesDecrypt(inputString);
 		}
@@ -84,8 +86,6 @@ public class EncryptionHandler {
 	
 	
 	//aes:
-	
-	
 	private SecretKey aesStringToKey(String stringKey){
         byte[] encodedKey     = Base64.getDecoder().decode(stringKey);
         return new SecretKeySpec(encodedKey, "AES");
@@ -119,10 +119,6 @@ public class EncryptionHandler {
         Cipher aesCipher = Cipher.getInstance("AES");
         aesCipher.init(Cipher.DECRYPT_MODE, secKey);
         byte[] bytesDecrypted = aesCipher.doFinal(b);
-
-		
-		
-		//interpret bytes. gg
 		return bytesDecrypted;
 	}
 		
