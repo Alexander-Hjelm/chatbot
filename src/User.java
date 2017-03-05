@@ -1,12 +1,11 @@
 
 public class User {
-	
-	
+
 	public String name;
 	public String adress;
 	public String key;
 	public boolean aes;
-	
+
 	public User(String name, String adress, String key, boolean aes) {
 		this.name = name;
 		this.adress = adress;

@@ -57,5 +57,5 @@ public class Message {
 		this.fileReply = fileReply;
 		this.port = port;
 	}
-	
+
 }

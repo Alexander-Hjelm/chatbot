@@ -218,5 +218,5 @@ public class Client extends CommunicationsHandler{
 			fileClient = new FileClient(serverUser.adress, port, fileName, fileSize, UI, bufferSize, myData);
 		}
 	}
-	
+
 }

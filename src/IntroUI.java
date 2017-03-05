@@ -254,8 +254,7 @@ public class IntroUI extends JFrame{
 			if (Frame.getFrames().length == 0) {
 				System.exit(0);
 			}
-		
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

@@ -7,9 +7,9 @@ public class MyData {
 	protected boolean aes;
 	protected String communicationType;
 	protected Color color;
-	
-	
-	public MyData(String userNameIn, String addressIn, String keyIn, boolean aesIn, String communicationTypeIn, Color colorIn) {
+
+	public MyData(String userNameIn, String addressIn, String keyIn, boolean aesIn, String communicationTypeIn,
+			Color colorIn) {
 		userName = userNameIn;
 		address = addressIn;
 		key = keyIn;
@@ -17,6 +17,5 @@ public class MyData {
 		communicationType = communicationTypeIn;
 		color = colorIn;
 	}
-	
-}
 
+}
