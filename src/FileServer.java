@@ -73,7 +73,6 @@ public class FileServer implements Runnable{
 			
 	        byte[] bytes = new byte[bufferSize];
 	        int currentBytes = 0;
-//	        int count;
 	        try {
 				while (fileStreamIn.read(bytes) != -1){
 					String encryptedHex = "";
@@ -91,48 +90,8 @@ public class FileServer implements Runnable{
 					
 				}
 			} catch (IOException e1) {
-				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
-			
-			
-			//file to byte
-//			Path path = Paths.get(file.getPath());
-//			byte[] byteInput = null;
-//			try {
-//				byteInput = Files.readAllBytes(path);
-//			} catch (IOException e2) {
-//				// TODO Auto-generated catch block
-//				e2.printStackTrace();
-//			}
-//			
-//			
-//			//outStr is now the encrypted file string
-//
-//
-//
-//	        
-//	        
-//			while (currentBytes < byteInput.length) {
-//
-//			}
-			
-	        
-//	        
-//	        			InputStream stream = new ByteArrayInputStream(encryptedHex.getBytes(StandardCharsets.UTF_8));
-//	        try {
-//				while ((count = stream.read(bytes)) > 0) {
-//					streamOut.write(bytes, 0, count);
-//					
-//					//Fill progress bar on ChatUI
-//					currentBytes += bufferSize;
-//					double frac = (double) currentBytes/ (double) file.length();
-//					int progressBarFill = (int) (frac * 100);
-//					chatUI.setProgressBarFill(progressBarFill);
-//				}
-//	        } catch (IOException e) {
-//				e.printStackTrace();
-//			}
 	        
 			//Enable send file button
 			chatUI.toggleSendFileButton();

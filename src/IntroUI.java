@@ -210,7 +210,6 @@ public class IntroUI extends JFrame{
 			port = Integer.parseInt(portPane.getText());
 		} catch (NumberFormatException e1) {
 			port = 4444;
-//			e1.printStackTrace();
 		}
 
 		//Encryption stuff
@@ -243,12 +242,10 @@ public class IntroUI extends JFrame{
 			if (serverRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Server", color);
 				server = new Server(port, myData);
-//				chatUI = new ChatUI(new Server(port, myData), myData);
 			}
 			else if (clientRadioButton.isSelected()) {
 				myData = new MyData(userName,address,key,aes,"Client", color);
 				client = new Client(address, port, myData);
-//				chatUI = new ChatUI(new Client(address, port, myData), myData);
 			}
 			
 			this.dispose();

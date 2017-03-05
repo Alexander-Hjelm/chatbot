@@ -82,7 +82,6 @@ public class FileClient implements Runnable{
 						bytes = encryptionHandler.decrypt(encryptedHex);
 					} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException
 							| NoSuchAlgorithmException | NoSuchPaddingException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 					fileStreamOut.write(bytes);

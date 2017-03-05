@@ -48,8 +48,6 @@ public class EncryptionHandler {
 	
 		int key = Integer.parseInt(thisKey);
 		
-//		byte[] b = inputString.getBytes(StandardCharsets.UTF_8);	
-		
 		for (int i = 0; i < byteInput.length; i++) {
 			
 
@@ -80,7 +78,6 @@ public class EncryptionHandler {
 			b[i] = (byte) shifted;
 		}
 		
-//		String outputString = new String(b, StandardCharsets.UTF_8);	
 		return b;
 	}
 	
@@ -98,8 +95,6 @@ public class EncryptionHandler {
 	
 	private String aesEncrypt(byte[] byteInput) throws InvalidKeyException, IllegalBlockSizeException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException{
 		SecretKey secKey = aesStringToKey(thisKey);
-        
-//        byte[] b = inputString.getBytes(StandardCharsets.UTF_8);
         
         // encrypt the bytes of inputstring
         Cipher aesCipher = Cipher.getInstance("AES");
@@ -129,7 +124,6 @@ public class EncryptionHandler {
 		
 		
 		//interpret bytes. gg
-//		String plainText = new String(bytesDecrypted, StandardCharsets.UTF_8);
 		return bytesDecrypted;
 	}
 		

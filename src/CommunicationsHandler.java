@@ -8,7 +8,6 @@ public abstract class CommunicationsHandler implements Runnable{
 
 	public abstract void run();
 	public abstract void send(Message msg);
-//	public abstract void sendKeyRequest();
 	public abstract void sendFileRequest(File file, String additionalText, User destinationUser);
 	public abstract void sendFileResponse(boolean reply, int port, String additionalText, String fileName, long fileSize, int destinationUserIndex);
 	public abstract void exit() throws IOException;

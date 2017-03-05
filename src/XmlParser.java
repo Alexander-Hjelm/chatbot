@@ -48,7 +48,6 @@ public class XmlParser {
 			xmlDoc = buildXMLDocumentFromString(xml);
 		} catch (SAXException | IOException | ParserConfigurationException e) {
 			Message outMsg = new Message("ERROR: XML error at sender. Message is not shown", "System", myData.color);
-			//outMsg.setDisconnectType(false);
 			return outMsg;
 		}
 		
@@ -153,7 +152,6 @@ public class XmlParser {
 					plainText = new String(encryptionHandler.decrypt(stringToBeDecrypted), StandardCharsets.UTF_8);
 				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
 						| NoSuchPaddingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -218,7 +216,6 @@ public class XmlParser {
 		try {
 			xmlDoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
 		} catch (ParserConfigurationException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} 
 		
@@ -248,9 +245,7 @@ public class XmlParser {
 
 		if(message.messageType == MessageType.KEYREQUEST) {
 			Element keyReqElem = xmlDoc.createElement("keyrequest");
-//			keyElem.setAttribute("type", arg1);
 			keyReqElem.setTextContent(message.text);
-//			textElem.setTextContent("");
 			msgElem.appendChild(keyReqElem);
 		}
 		
@@ -311,7 +306,6 @@ public class XmlParser {
 					hexString = encryptionHandler.encrypt(bytesToBeEncrypted);
 				} catch (InvalidKeyException | IllegalBlockSizeException | BadPaddingException | NoSuchAlgorithmException
 						| NoSuchPaddingException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
@@ -331,7 +325,6 @@ public class XmlParser {
 			transformer.transform(new DOMSource(xmlDoc), new StreamResult(writer));
 			xmlString = writer.getBuffer().toString().replaceAll("\n|\r", "");
 		} catch (IllegalArgumentException | TransformerFactoryConfigurationError | TransformerException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		

@@ -45,7 +45,6 @@ public class ChatUI extends JFrame{
 	private JButton sendButton;
 	private JButton exitButton;
 	private JButton sendFileButton;
-	private JButton newChatButton;
 	private JFileChooser fileChooser = new JFileChooser();
 	private FileReceiverUI fileReceiverUI;
 	private JProgressBar progressBar = new JProgressBar(0, 100);
@@ -65,13 +64,6 @@ public class ChatUI extends JFrame{
 		panel = new JPanel();
 		buttonAction();
 		createAndShowGUI(panel);
-		
-		// tell communicationsHandler, client or server that this ChatUI is their UI:
-//		communicationsHandler.setUI(this);
-		
-		//Send Key request AFTER UI has been set, otherwise we get a NullPointerException on ChatUI
-//		communicationsHandler.sendKeyRequest();
-		//moved to server/client
 
 		//Build menu bar
 		menuBar.add(menu);
@@ -95,7 +87,6 @@ public class ChatUI extends JFrame{
 		sendButton = new JButton("send");
 		exitButton = new JButton("exit");;
 		sendFileButton = new JButton("send file");
-		newChatButton = new JButton("new chat");
 		
 		
 		sendButton.addActionListener(new ActionListener() {
@@ -133,19 +124,8 @@ public class ChatUI extends JFrame{
 		                 communicationsHandler.sendFileRequest(file, myMessagePane.getText(), null);
 	            	 }
 	            	 
-	                 
-//	         		 Check for xml errors,  \o/
-//	                 XmlParser xmlParser = new XmlParser(myData);
-//	                 xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(new Message(myData.userName, myMessagePane.getText(), myData.color)));
-//	         		
 	         		myMessagePane.setText("");
 	             }
-	         }
-	      });
-		
-		newChatButton.addActionListener(new ActionListener() {
-	         public void actionPerformed(ActionEvent e) {
-	        	 // add listener stuff, some get data from myMessagePane for this button.
 	         }
 	      });
 		
@@ -167,12 +147,10 @@ public class ChatUI extends JFrame{
 		myMessagePane.addKeyListener(new KeyListener() {
 			
 			public void keyTyped(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
 			public void keyReleased(KeyEvent e) {
-				// TODO Auto-generated method stub
 				
 			}
 			
@@ -248,7 +226,6 @@ public class ChatUI extends JFrame{
             	try {
 					communicationsHandler.exit();
 				} catch (IOException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
 				}
             	
@@ -302,8 +279,7 @@ public class ChatUI extends JFrame{
 		} catch (BadLocationException e) {
 			e.printStackTrace();
 		}
-		
-//		this.messageArea.append(msg.sender + ": " + msg.text + "\n");
+        
 	}
 
 	public void setProgressBarFill (int i) {

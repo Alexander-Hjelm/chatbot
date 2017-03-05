@@ -15,7 +15,6 @@ public class Server extends CommunicationsHandler {
 
 	private int port;
 	private ServerSocket server;
-//	private Socket socket;
 	private DataOutputStream streamOut;
 	private ChatUI UI;
 	private Thread connectionThread;
@@ -90,7 +89,6 @@ public class Server extends CommunicationsHandler {
 					
 					
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 				
@@ -228,7 +226,6 @@ public class Server extends CommunicationsHandler {
 					handleMessageType(msg);
 					Thread.sleep(500);
 				} catch (IOException | InterruptedException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 			}
@@ -243,8 +240,6 @@ public class Server extends CommunicationsHandler {
 				Message msgOut = msg;
 				msgOut.messageType = MessageType.STANDARD;
 				updateOtherUsers(msgOut);
-				
-//				clientUsers.set(userIndex, null);
 				
 				//kill this thread
 				isRunning = false;
