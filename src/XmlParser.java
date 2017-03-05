@@ -358,7 +358,7 @@ public class XmlParser {
 		return outStr;
 	}
 	
-	private String deEscapeXMLChars(String inputStr) {
+	public String deEscapeXMLChars(String inputStr) {
 		String outStr = inputStr;
 		outStr = outStr.replace("&amp;", "&");	//Needs to be first
 		outStr = outStr.replace("&lt;", "<");

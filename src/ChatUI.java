@@ -278,11 +278,11 @@ public class ChatUI extends JFrame{
 		Message msg = new Message(text, myData.userName, myData.color);
 		
 		communicationsHandler.send(msg);
-//							  _   _
-//		Check for xml errors,  \o/
-//		XmlParser xmlParser = new XmlParser(myData); 
-//		String outText = xmlParser.xmlStringToMessage(xmlParser.MessageToXmlString(msg)).text;
-//		msg.text = outText;
+							  
+//		De-escape xml-specific characters
+		XmlParser xmlParser = new XmlParser(myData);
+		String outText = xmlParser.deEscapeXMLChars(msg.text);
+		msg.text = outText;
 		
 		myMessagePane.setText("");
 		updateMessageArea(msg);
