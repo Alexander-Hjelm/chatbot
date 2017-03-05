@@ -66,12 +66,6 @@ public class IntroUI extends JFrame{
 	    JPanel titlePanel = new JPanel(titleLayout);
 	    titlePanel.add(titleLabel);	    
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 0;
-        c.gridx = 0;
-        c.weightx = 0.5;
-        panel.add(titlePanel,c);
-		
 		clientServerButtonGroup = new ButtonGroup();
 		clientServerButtonGroup.add(clientRadioButton);
 		clientServerButtonGroup.add(serverRadioButton);
@@ -87,12 +81,6 @@ public class IntroUI extends JFrame{
         clientServerPanel.add(serverRadioButton);
 		clientServerPanel.add(radioButtonServerLabel);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 1;
-        c.gridx = 0;
-        c.weightx = 0.5;
-        panel.add(clientServerPanel,c);
-		
 		cryptoButtonGroup = new ButtonGroup();
 		cryptoButtonGroup.add(aesRadioButton);
 		cryptoButtonGroup.add(caesarRadioButton);
@@ -106,12 +94,6 @@ public class IntroUI extends JFrame{
 		cryptoButtonPanel.add(radioButtonAesLabel);
 		cryptoButtonPanel.add(caesarRadioButton);
 		cryptoButtonPanel.add(radioButtonCaesarLabel);
-		
-		c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 2;
-        c.gridx = 0;
-        c.weightx = 0.5;
-        panel.add(cryptoButtonPanel,c);
 
 		connectButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
@@ -139,12 +121,6 @@ public class IntroUI extends JFrame{
 		namePanesPanel.add(nameLabel);
 		namePanesPanel.add(namePane);
 		
-		c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 3;
-        c.gridx = 0;
-        c.weightx = 0.5;
-        panel.add(namePanesPanel,c);
-		
 		GridLayout inputPanesLayout = new GridLayout(2, 2);
 		JPanel inputPanesPanel = new JPanel(inputPanesLayout);
 		inputPanesPanel.setBorder(BorderFactory.createTitledBorder("Connection details:"));
@@ -153,12 +129,6 @@ public class IntroUI extends JFrame{
 		inputPanesPanel.add(adressPane);
 		inputPanesPanel.add(portLabel);
 		inputPanesPanel.add(portPane);
-
-		c.fill = GridBagConstraints.HORIZONTAL;
-        c.gridy = 4;
-        c.gridx = 0;
-        c.weightx = 0.5;
-        panel.add(inputPanesPanel,c);
 		
         colorChooser.setColor(Color.BLACK);
         
@@ -173,6 +143,36 @@ public class IntroUI extends JFrame{
 		jButtonPanel.add(connectButton);
 		jButtonPanel.add(exitButton);
 		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 0;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(titlePanel,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 1;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(clientServerPanel,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 2;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(cryptoButtonPanel,c);
+        
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 3;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(namePanesPanel,c);
+		
+		c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridy = 4;
+        c.gridx = 0;
+        c.weightx = 0.5;
+        panel.add(inputPanesPanel,c);
+        
 		c.fill = GridBagConstraints.HORIZONTAL;
         c.gridy = 6;
         c.gridx = 0;
