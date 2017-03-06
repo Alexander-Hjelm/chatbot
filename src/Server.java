@@ -145,8 +145,16 @@ public class Server extends CommunicationsHandler {
 		}
 
 		isRunning = false;
-		stopServer();
+		//wait for listeners to know it's bye time. 
+		try {
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		UI.dispose();
+		stopServer();
+		
 
 		// if no windows are currently up, exit normally
 		if (Frame.getFrames().length == 0) {

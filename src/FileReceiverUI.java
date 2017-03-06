@@ -108,7 +108,7 @@ public class FileReceiverUI extends JFrame {
 		noButton.addActionListener(new ActionListener() {
 	         public void actionPerformed(ActionEvent e) {
 	        	//Send negative file response
-	        	 int port = Integer.parseInt(portTextField.getText());
+	        	 int port = 0;
 	        	 communicationsHandler.sendFileResponse(false, port, optionalMessageTextField.getText(), fileName, fileSize, destinationUserIndex);
 	        	 dispose();
 	         }
