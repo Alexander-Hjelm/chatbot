@@ -134,6 +134,12 @@ public class Server extends CommunicationsHandler {
 	public void exit() throws IOException {
 		// kill thread, see while loop in run.
 		connectionThread = null;
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		for (int j = 0; j < threadPool.size(); j++) {
 			threadPool.set(j, null);
 		}
@@ -146,12 +152,7 @@ public class Server extends CommunicationsHandler {
 
 		isRunning = false;
 		//wait for listeners to know it's bye time. 
-		try {
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+
 		UI.dispose();
 		stopServer();
 		
@@ -202,6 +203,17 @@ public class Server extends CommunicationsHandler {
 	public ArrayList<User> getClientUsers() {
 		return clientUsers;
 	}
+	
+	private void checkConnectedUsers(){
+		for (int i = 0; i < socketPool.size(); i++) {
+			if(socketPool.get(i) != null){
+				return;
+			}
+			
+		}
+		clientsConnected = false;
+		
+	}
 
 	private class MessageListener implements Runnable {
 		private Socket listenSocket;
@@ -239,14 +251,19 @@ public class Server extends CommunicationsHandler {
 			if (msg.messageType == MessageType.DISCONNECT) {
 
 				Message msgOut = msg;
-				msgOut.messageType = MessageType.STANDARD;
-				updateOtherUsers(msgOut);
 
 				// kill this thread
 				isRunning = false;
 
 				// check sendToUser why this:
+				socketPool.get(socketPool.indexOf(listenSocket)).close();
 				socketPool.set(socketPool.indexOf(listenSocket), null);
+				
+				//tell the others
+				checkConnectedUsers();
+				msgOut.messageType = MessageType.STANDARD;
+				updateOtherUsers(msgOut);
+				
 
 			}
 
@@ -285,6 +302,7 @@ public class Server extends CommunicationsHandler {
 				} else {
 					UI.updateMessageArea(new Message("Reciever did not accepted your file.", "System", Color.BLACK));
 				}
+				//else standard message:
 			} else {
 				updateOtherUsers(msg);
 			}

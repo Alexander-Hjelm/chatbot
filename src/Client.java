@@ -31,6 +31,7 @@ public class Client extends CommunicationsHandler{
 	
 	private long fileRequestSendTime;
 	private long keyRequestSendTime;
+	private boolean isRunning;
 	
 	
 	public Client(String adress, int portIn, MyData myDataIn) throws UnknownHostException, IOException {
@@ -42,6 +43,7 @@ public class Client extends CommunicationsHandler{
 		
 		//if connect worked, a server is up.
 		this.serverUp = true;
+		this.isRunning = true;
 		
 	}
 
@@ -68,7 +70,7 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void run() {
 		
-		while (t != null) {
+		while (isRunning) {
 			//Listen for messages from server
 			
 			try {
@@ -80,10 +82,14 @@ public class Client extends CommunicationsHandler{
 				
 				UI.updateMessageArea(msg);
 				handleMessageType(msg);
+				Thread.sleep(500);
 				
 			} catch (UnknownHostException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
@@ -163,6 +169,13 @@ public class Client extends CommunicationsHandler{
 	@Override
 	public void exit() throws IOException {
 		t = null;
+		isRunning = false;
+		try {
+			//wait for server to realize client is gone.
+			Thread.sleep(1000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		
 		//if connected to server.
 		if(serverUp) {
@@ -171,12 +184,7 @@ public class Client extends CommunicationsHandler{
 			send(exitMsg);
 		}
 		
-		try {
-			//wait for server to realize client is gone.
-			Thread.sleep(1000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+
 		socket.close();
 		UI.dispose();
 		

@@ -63,9 +63,12 @@ public class XmlParser {
 		// check to see if there's an <keyrequest\> tag. Assume connected, but
 		// if tag exist, change status.
 		connectionNode = xmlDoc.getElementsByTagName("keyrequest").item(0);
+		Element keyElem = null;
 		boolean isKeyRequestType = false;
 		if (!(connectionNode == null)) {
 			isKeyRequestType = true;
+			keyElem = (Element) xmlDoc.getElementsByTagName("keyrequest").item(0);
+			String nonEncryptedText = keyElem.getTextContent();
 		}
 
 		// check to see if there's an <keyresponse\> tag. Assume connected, but
@@ -76,8 +79,7 @@ public class XmlParser {
 		boolean isKeyResponseType = false;
 		if (!(connectionNode == null)) {
 			isKeyResponseType = true;
-			Element keyElem = (Element) xmlDoc.getElementsByTagName("keyresponse").item(0);
-
+			keyElem = (Element) xmlDoc.getElementsByTagName("keyresponse").item(0);
 			// key is sent as an hex-string. parse hex to bytes.
 			byte[] byteKey = DatatypeConverter.parseHexBinary(keyElem.getAttribute("key"));
 			// make those bytes to a string again.
@@ -186,7 +188,8 @@ public class XmlParser {
 		// Only add key to message if it was set before
 		if (isKeyResponseType) {
 			// This is a key response message
-			outMsg = new Message(text, sender, color, messageType, key, aes);
+			String nonEncryptedText = keyElem.getTextContent();
+			outMsg = new Message(nonEncryptedText, sender, color, messageType, key, aes);
 		} else if (isFileRequestType) {
 			// This is a file request message
 			outMsg = new Message(text, sender, color, messageType, fileName, size);
@@ -194,8 +197,8 @@ public class XmlParser {
 			// This is a file response message
 			outMsg = new Message(text, sender, color, messageType, reply, port);
 		} else if (isKeyRequestType) {
-			// This is a standard message
-			outMsg = new Message(text, sender, color, messageType);
+			String nonEncryptedText = keyElem.getTextContent();
+			outMsg = new Message(nonEncryptedText, sender, color, messageType);
 		} else {
 			// This is a standard message
 			outMsg = new Message(text, sender, color, messageType);
@@ -234,6 +237,7 @@ public class XmlParser {
 		// set attributes
 		msgElem.setAttribute("sender", message.sender);
 		textElem.setAttribute("color", message.color.toString());
+		encryptedElem.setAttribute("type", "");
 
 		// add disconnected tag if message contains connected = false.
 		if (message.messageType == MessageType.DISCONNECT) {
@@ -244,6 +248,7 @@ public class XmlParser {
 			Element keyReqElem = xmlDoc.createElement("keyrequest");
 			keyReqElem.setTextContent(message.text);
 			msgElem.appendChild(keyReqElem);
+			textElem.setTextContent("");
 		}
 
 		if (message.messageType == MessageType.KEYRESPONSE) {
@@ -259,6 +264,7 @@ public class XmlParser {
 			keyElem.setAttribute("key", keyString);
 			keyElem.setAttribute("type", type);
 			keyElem.setTextContent(message.text);
+			textElem.setTextContent("");
 
 			msgElem.appendChild(keyElem);
 
@@ -295,6 +301,9 @@ public class XmlParser {
 		if ((message.messageType != MessageType.KEYRESPONSE) && (message.messageType != MessageType.KEYREQUEST)) {
 			encryptionHandler = new EncryptionHandler(user.key, user.aes);
 			NodeList encryptedChilds = encryptedElem.getChildNodes();
+			String type = "aes";
+			if (user.aes == false){type = "caesar";}
+			encryptedElem.setAttribute("type", type);
 			for (int i = 0; i < encryptedChilds.getLength(); i++) {
 
 				byte[] bytesToBeEncrypted = encryptedChilds.item(i).getTextContent().getBytes(StandardCharsets.UTF_8);
